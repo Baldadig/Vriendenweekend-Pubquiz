@@ -348,11 +348,13 @@
   <span class="spacer"></span>
   <span class="progress" id="prog"></span>
   <button onclick="toggleTune()" id="tuneBtn" title="Rad van Fortuin-tune aan/uit">♪ Tune</button>
+  <button onclick="toggleBgMusic()" id="bgBtn" title="Achtergrond-playlist aan/uit — speelt door over alle pagina's">♬ Muziek</button>
   <button onclick="toggleSoundboard()" id="sbBtn" title="Soundboard met geluidseffecten">🎛️ FX</button>
   <button onclick="toggleDark()" id="darkBtn" title="Donker / licht (handig op de beamer)">🌙</button>
   <button onclick="goFs()" title="Volledig scherm">⛶</button>
 </div>
 <div id="tuneplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
+<div id="bgplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
 <div id="soundboard" class="soundboard" aria-hidden="true"></div>
 <div id="sbplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
 <canvas id="confetti"></canvas>
@@ -375,6 +377,38 @@
 const INTRO   = "https://open.spotify.com/playlist/2l0YY742RL4txWlBSxL27k"; // Rad van Fortuin intro
 const TUNE = "jyXb9rF8v4Q"; // achtergrond-/spelshowtune (audio, loopt automatisch)
 let tunePlayer=null, tunePlaying=false;
+// === Achtergrond-playlist (loopt door over alle pagina's). Vul met YouTube video-ID's: ===
+const BGMUSIC = [
+  "Pd9RrKXOKcI",  // PawPaw Rod - Hello Dear
+  "7-lWzQd_xeQ",  // Jungle - Keep Moving
+  "oc50wHexbwg",  // Khruangbin - Time (You and I)
+  "8pReEUxHxJM",  // Channel Tres - Topdown
+  "M1N_wbhAfQ4",  // Tom Misch - It Runs Through Me
+  "c-NOT--gVW4",  // PawPaw Rod - Rainy
+  "7nJRGARveVc",  // Jungle - Casio
+  "OZRYzH0Q0pU",  // Men I Trust - Show Me How
+  "EtNIMvyEIQA",  // Channel Tres - Controller
+  "PGhag0LjKQ8",  // PawPaw Rod - Ain't Too Cool
+  "_2qsU8FGU_E",  // Parcels - Tieduprightnow
+  "BcsfftwLUf0",  // Jungle - Busy Earnin'
+  "EfgAd6iHApE",  // FKJ - Ylang Ylang
+  "_nXyJjZCYXo",  // PawPaw Rod - Cherry Tree
+  "Mva_EluErSA",  // Jungle - Cherry
+  "l4MlaMtRp7E"   // PawPaw Rod - I Wish
+];
+let bgPlayer=null, bgWanted=false;
+function setBgBtn(){ var b=document.getElementById('bgBtn'); if(b) b.innerHTML = bgWanted ? '\u23f8 Muziek' : '\u266c Muziek'; }
+function toggleBgMusic(){ var b=document.getElementById('bgBtn');
+  if(!BGMUSIC.length){ if(b) b.innerHTML='\u266c (nog leeg)'; return; }
+  if(!(window.YT&&window.YT.Player)){ if(b) b.innerHTML='\u266c laden\u2026'; return; }
+  if(!bgPlayer){ bgWanted=true; setBgBtn();
+    bgPlayer=new YT.Player('bgplayer',{ videoId:BGMUSIC[0], playerVars:{autoplay:1,controls:0,disablekb:1,playsinline:1,rel:0},
+      events:{ onReady:function(e){ try{ e.target.setVolume(35); e.target.loadPlaylist(BGMUSIC); e.target.setLoop(true); if(bgWanted) e.target.playVideo(); }catch(x){} setBgBtn(); },
+        onStateChange:function(e){ if(e.data===YT.PlayerState.ENDED){ try{e.target.playVideo();}catch(x){} } } } });
+    return; }
+  if(bgWanted){ try{bgPlayer.pauseVideo();}catch(e){} bgWanted=false; } else { try{bgPlayer.playVideo();}catch(e){} bgWanted=true; } setBgBtn(); }
+function bgDuck(){ if(bgPlayer && bgWanted){ try{bgPlayer.pauseVideo();}catch(e){} } }
+function bgUnduck(){ if(bgPlayer && bgWanted){ try{bgPlayer.playVideo();}catch(e){} } }
 function toggleTune(){
   const btn=document.getElementById('tuneBtn');
   if(!tunePlayer){
@@ -643,7 +677,7 @@ function letter(i){return ['A','B','C','D','E'][i];}
 let ytPlayer=null, ytReady=false;
 window.onYouTubeIframeAPIReady=function(){ytReady=true;};
 (function(){var s=document.createElement('script');s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);})();
-function stopClip(){ if(ytPlayer){ try{ytPlayer.stopVideo();ytPlayer.destroy();}catch(e){} ytPlayer=null; } document.querySelectorAll('video').forEach(v=>{try{v.pause();}catch(e){}}); }
+function stopClip(){ if(ytPlayer){ try{ytPlayer.stopVideo();ytPlayer.destroy();}catch(e){} ytPlayer=null; } document.querySelectorAll('video').forEach(v=>{try{v.pause();}catch(e){}}); if(typeof bgUnduck==='function') bgUnduck(); }
 function toggleClip(vid){
   const sb=document.getElementById('sb'); if(!sb)return;
   if(!ytReady){ const c=sb.querySelector('.sb-cap'); if(c)c.textContent='Even laden…'; return; }
@@ -652,8 +686,8 @@ function toggleClip(vid){
       playerVars:{controls:0,disablekb:1,playsinline:1,rel:0,modestbranding:1,fs:0},
       events:{ onReady:e=>{e.target.playVideo();},
         onStateChange:e=>{ const s2=document.getElementById('sb'); if(!s2)return; const b=document.getElementById('sbplay');
-          if(e.data===YT.PlayerState.PLAYING){s2.classList.add('playing'); if(b)b.textContent='⏸';}
-          else{s2.classList.remove('playing'); if(b)b.textContent='▶';} } }
+          if(e.data===YT.PlayerState.PLAYING){s2.classList.add('playing'); if(b)b.textContent='⏸'; bgDuck();}
+          else{s2.classList.remove('playing'); if(b)b.textContent='▶'; bgUnduck();} } }
     });
   } else {
     const st=ytPlayer.getPlayerState&&ytPlayer.getPlayerState();

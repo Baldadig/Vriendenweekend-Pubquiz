@@ -59,7 +59,13 @@
   #helpov .hv-sec{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#8a8276;margin:1em 0 .35em;font-size:.82rem}
   #helpov .hv-row{font-family:var(--body);font-size:clamp(.9rem,1.8vw,1.1rem);line-height:1.7;color:var(--ink)}
   #helpov kbd{font-family:var(--pop);background:var(--ink);color:var(--paper);border-radius:5px;padding:.06em .45em;font-size:.82em;display:inline-block;min-width:1.3em;text-align:center}
-  #helpov .hv-close{margin-top:1.2em;font-family:var(--pop);text-transform:uppercase;background:var(--blue);color:var(--paper);border:3px solid var(--ink);border-radius:9px;box-shadow:4px 4px 0 var(--ink);padding:.5em 1.2em;cursor:pointer}
+  #helpov .hv-close{margin-top:1.3em;font-family:var(--pop);text-transform:uppercase;background:var(--blue);color:var(--paper);border:3px solid var(--ink);border-radius:9px;box-shadow:4px 4px 0 var(--ink);padding:.5em 1.3em;cursor:pointer}
+  #helpov .hv-sec small{font-weight:600;letter-spacing:.04em;text-transform:none;color:#9a948a}
+  #helpov .hv-grid{display:grid;grid-template-columns:max-content 1fr;gap:.55em 1.2em;align-items:center;font-family:var(--body);font-size:clamp(.9rem,1.8vw,1.08rem);color:var(--ink)}
+  #helpov .hv-k{display:flex;gap:.3em;flex-wrap:wrap}
+  #helpov .hv-snd{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.5em .9em;font-family:var(--body);font-size:clamp(.85rem,1.7vw,1rem);color:var(--ink)}
+  #helpov .hv-snd span{display:flex;gap:.5em;align-items:center}
+  #helpov .hv-btns{font-family:var(--body);font-size:clamp(.9rem,1.8vw,1.05rem);color:var(--ink)}
   .qtimer{height:7px;background:var(--paper2);border:2px solid var(--ink);border-radius:4px;overflow:hidden;margin:0 0 .5em;box-shadow:2px 2px 0 var(--ink)}
   .qtimer-bar{height:100%;width:100%;background:repeating-linear-gradient(90deg,var(--red) 0 18px,var(--blue) 18px 36px,var(--yellow) 36px 54px,var(--ink) 54px 72px);transition:width .25s linear}
   .rules{list-style:none;counter-reset:r;max-width:700px;margin:.9em auto 0;text-align:left;display:flex;flex-direction:column;gap:.45em;padding:0}
@@ -378,7 +384,7 @@
 <div id="sbplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
 <canvas id="confetti"></canvas>
 <div id="blackout" onclick="toggleBlackout()" title="Druk B om terug te keren"></div>
-<div id="helpov" onclick="if(event.target.id==='helpov')toggleHelp()"><div class="hv-card"><h2>Sneltoetsen</h2><div class="hv-sec">Navigatie &amp; presentatie</div><div class="hv-row"><kbd>←</kbd> <kbd>→</kbd> / <kbd>spatie</kbd> &mdash; vorige / volgende</div><div class="hv-row"><kbd>A</kbd> / <kbd>Enter</kbd> &mdash; antwoord tonen</div><div class="hv-row"><kbd>P</kbd> &mdash; vraag-timer pauzeren / hervatten</div><div class="hv-row"><kbd>F</kbd> volledig scherm &middot; <kbd>B</kbd> zwart scherm &middot; <kbd>?</kbd> deze hulp</div><div class="hv-sec">Soundboard (zonder paneel te openen)</div><div class="hv-row"><kbd>G</kbd> geit &middot; <kbd>C</kbd> camera &middot; <kbd>L</kbd> lachband &middot; <kbd>I</kbd> liftmuziek &middot; <kbd>M</kbd> Metal Gear &middot; <kbd>K</kbd> klap</div><div class="hv-row"><kbd>Z</kbd> zo terug &middot; <kbd>T</kbd> trombone &middot; <kbd>H</kbd> airhorn &middot; <kbd>D</kbd> daaaag &middot; <kbd>X</kbd> mission failed &middot; <kbd>S</kbd> aahhhh &middot; <kbd>0</kbd> stop</div><div class="hv-sec">Knoppen (onderbalk)</div><div class="hv-row">♪ Tune &middot; ♬ Muziek (achtergrond) &middot; 🔊 alles dempen</div><button class="hv-close" onclick="toggleHelp()">Sluiten</button></div></div>
+<div id="helpov" onclick="if(event.target.id==='helpov')toggleHelp()"><div class="hv-card"><h2>Sneltoetsen</h2><div class="hv-sec">Navigatie &amp; presentatie</div><div class="hv-grid"><span class="hv-k"><kbd>←</kbd><kbd>→</kbd><kbd>spatie</kbd></span><span>Vorige / volgende</span><span class="hv-k"><kbd>A</kbd><kbd>Enter</kbd></span><span>Antwoord tonen</span><span class="hv-k"><kbd>P</kbd></span><span>Vraag-timer pauzeren / hervatten</span><span class="hv-k"><kbd>F</kbd></span><span>Volledig scherm</span><span class="hv-k"><kbd>B</kbd></span><span>Zwart scherm</span><span class="hv-k"><kbd>?</kbd></span><span>Deze hulp</span></div><div class="hv-sec">Soundboard <small>— zonder paneel te openen</small></div><div class="hv-snd"><span><kbd>G</kbd> geit</span><span><kbd>C</kbd> camera</span><span><kbd>L</kbd> lachband</span><span><kbd>I</kbd> liftmuziek</span><span><kbd>M</kbd> Metal Gear</span><span><kbd>K</kbd> klap</span><span><kbd>Z</kbd> zo terug</span><span><kbd>T</kbd> trombone</span><span><kbd>H</kbd> airhorn</span><span><kbd>D</kbd> daaaag</span><span><kbd>X</kbd> mission failed</span><span><kbd>S</kbd> aahhhh</span><span><kbd>0</kbd> stop</span></div><div class="hv-sec">Knoppen (onderbalk)</div><div class="hv-btns">♪ Tune &middot; ♬ Muziek (achtergrond) &middot; 🔇 alles dempen</div><button class="hv-close" onclick="toggleHelp()">Sluiten</button></div></div>
 <div id="wmplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
 <div id="gate">
   <div class="gate-card">
@@ -916,7 +922,7 @@ window.TI=(function(){
 })();
 window.UR=(function(){
   var COLS=['#e23b2e','#2438c8','#f5b417','#1aa39a','#181320','#ee7b30'];
-  var rows=null,ptr=-1,tbDone=false,tbNames=null;
+  var rows=null,ptr=-1,tbDone=false,tbNames=null,TB_ANSWER=1120;
   function $(id){return document.getElementById(id);}
   function teams(){return (window.QUIZ_TEAMS&&window.QUIZ_TEAMS.length)?window.QUIZ_TEAMS:[{name:'Team 1'},{name:'Team 2'},{name:'Team 3'},{name:'Team 4'},{name:'Team 5'},{name:'Team 6'}];}
   function init(){tbDone=false;tbNames=null;rows=null;ptr=-1;var T=teams(),g=$('ur-grid'),h='';
@@ -931,17 +937,15 @@ window.UR=(function(){
     if(tied.length>1 && top>0){ tiebreakForm(tied); return; }
     buildReveal();}
   function tiebreakForm(tied){
-    var h='<div class="ur-tb"><div class="ur-tbh">🤝 Gelijkspel aan kop!</div>'
-      +'<p class="ur-tbp">Stel een schatvraag (bijv. \u201Choeveel landen doen mee aan het WK?\u201D). Vul het juiste getal in en wat elk team gokte &mdash; dichtstbij wint.</p>'
-      +'<div class="ur-tbrow"><label>Juiste antwoord</label><input class="ur-tbcorrect" type="text" inputmode="numeric" autocomplete="off" placeholder="getal"></div>';
-    tied.forEach(function(r,i){h+='<div class="ur-tbrow"><label class="uc'+r.ci+'">'+r.name+'</label><input class="ur-tbguess" data-i="'+i+'" type="text" inputmode="numeric" autocomplete="off" placeholder="gok"></div>';});
+    var h='<div class="ur-tb"><div class="ur-tbh">🤝 Gelijkspel aan kop — tiebreak!</div>'
+      +'<p class="ur-tbp">Schatvraag: <b>hoeveel gram weegt een volle fles Salmari?</b><br>Elk team vult een schatting van 4 cijfers in &mdash; dichtstbij wint.</p>';
+    tied.forEach(function(r,i){h+='<div class="ur-tbrow"><label class="uc'+r.ci+'">'+r.name+'</label><input class="ur-tbguess" data-i="'+i+'" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000"></div>';});
     h+='<div class="ur-ctrls"><button onclick="UR.resolveTiebreak()">Bepaal winnaar →</button><button class="ghost" onclick="UR.init()">↩ Aanpassen</button></div></div>';
     $('ur-result').innerHTML=h; tbNames=tied.map(function(r){return r.name;});}
   function resolveTiebreak(){
-    var res=$('ur-result'), cf=res.querySelector('.ur-tbcorrect');
-    var correct=parseFloat(((cf&&cf.value)||'').replace(',','.')), guesses=[];
+    var res=$('ur-result'), correct=TB_ANSWER, guesses=[];
     res.querySelectorAll('.ur-tbguess').forEach(function(inp){guesses[+inp.dataset.i]=parseFloat((inp.value||'').replace(',','.'));});
-    var order=(tbNames||[]).map(function(name,i){return {name:name,d:(isNaN(correct)||isNaN(guesses[i]))?Infinity:Math.abs(guesses[i]-correct)};});
+    var order=(tbNames||[]).map(function(name,i){return {name:name,d:(isNaN(guesses[i]))?Infinity:Math.abs(guesses[i]-correct)};});
     order.sort(function(a,b){return a.d-b.d;});
     var inTie={}; order.forEach(function(o){inTie[o.name]=true;});
     var winners=[]; order.forEach(function(o){var r=rows.find(function(x){return x.name===o.name;});if(r)winners.push(r);});
@@ -991,7 +995,7 @@ function render(){
         <li>Antwoorden invullen met de <b>letter</b>: A · B · C · D.</li>
         <li>Halverwege een <b>pauze van 10 minuten</b>.</li>
         <li><b>Pas aan het einde</b> schuif je je blad door naar een ander team; dat team kijkt jullie antwoorden na.</li>
-        <li>De winnaar wint een <b>fles Salmari</b> 🍾.</li>
+        <li>De winnaar wint een <b>prachtige prijs</b> 🎁.</li>
       </ol>
       <div class="stripe" style="margin-top:.6em"></div>
     </div>`;

@@ -308,12 +308,18 @@
   /* uitslag: gemaskeerde invoer + stap-voor-stap */
   #ur-root .ur-score.masked{-webkit-text-security:disc;letter-spacing:.18em}
   #ur-root .ur-ctrls{display:flex;gap:.6em;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:.6vh}
-  #ur-root .ur-tb{max-width:560px;margin:0 auto;text-align:center}
-  #ur-root .ur-tbh{font-family:var(--pop);font-size:clamp(1.1rem,3vh,1.6rem);color:var(--red)}
-  #ur-root .ur-tbp{font-family:var(--body);font-weight:500;font-size:clamp(.85rem,1.9vh,1.05rem);color:var(--ink);max-width:46ch;margin:.4em auto .8em}
-  #ur-root .ur-tbrow{display:flex;align-items:center;gap:.7em;justify-content:center;margin:.35em 0}
-  #ur-root .ur-tbrow label{font-family:var(--head);font-weight:700;min-width:9em;text-align:right;color:var(--ink)}
-  #ur-root .ur-tbrow input{font-family:var(--pop);font-size:1.05rem;width:7em;text-align:center;border:2.5px solid var(--ink);border-radius:7px;background:var(--paper2);padding:.25em .4em}
+  #ur-root .ur-tb{display:flex;flex-direction:column;align-items:center;gap:1.5vh;text-align:center;width:100%;max-width:700px;margin:0 auto}
+  #ur-root .ur-tbkick{font-family:var(--pop);text-transform:uppercase;letter-spacing:.03em;font-size:clamp(.7rem,1.7vh,.95rem);color:var(--ink);background:var(--yellow);border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:.32em .85em;border-radius:7px;transform:rotate(-1.5deg)}
+  #ur-root .ur-tbh{font-family:var(--display);text-transform:uppercase;font-size:clamp(1.9rem,6.5vh,3.4rem);line-height:.95;color:var(--ink);text-shadow:4px 4px 0 var(--red);margin:.05em 0}
+  #ur-root .ur-tbp{font-family:var(--body);font-weight:500;font-size:clamp(.92rem,2vh,1.18rem);color:var(--ink);max-width:48ch;line-height:1.35;margin:0}
+  #ur-root .ur-tbgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.1em;width:100%;max-width:560px;margin:.5vh 0}
+  #ur-root .ur-tbcard{padding-bottom:.55em}
+  #ur-root .ur-tbcard .ur-bar{font-size:clamp(.95rem,2.1vh,1.2rem);padding:7px 10px}
+  #ur-root .ur-tbcard .ur-tbguess{font-family:var(--pop);font-size:clamp(1.7rem,5.2vh,2.6rem);text-align:center;letter-spacing:.16em;width:100%;border:none;background:transparent;color:var(--ink);padding:.2em .1em;outline:none}
+  #ur-root .ur-tbcard .ur-tbguess::placeholder{color:#cbc2b1}
+  #ur-root .ur-tbres{font-family:var(--body);background:var(--paper2);border:2.5px solid var(--ink);border-left:7px solid var(--yellow);border-radius:0 8px 8px 0;padding:.6em .9em;margin:0 auto 1vh;max-width:600px;font-size:clamp(.88rem,1.9vh,1.08rem);color:var(--ink);text-align:left}
+  #ur-root .ur-tbres-l{display:flex;flex-direction:column;gap:.12em;margin-top:.4em;font-size:.92em;color:#3a3346}
+  #ur-root .ur-tbres .tbwin{font-weight:800;color:var(--red)}
   #ur-root .ur-li{transition:opacity .25s}
   #ur-root .ur-li:not(.shown){opacity:.45}
   #ur-root .ur-blank{flex:1;text-align:left;font-family:var(--head);font-weight:700;letter-spacing:.3em;color:#b8b1a3;padding:.2em .6em}
@@ -353,6 +359,21 @@
     .media img.foto{max-height:38vh}
     .sb{width:94%;aspect-ratio:16/7}
   }
+  /* ===== Mobiel (iPhone) — knopplaatsing & fijnafstemming ===== */
+  @media(max-width:600px){
+    .controls{flex-wrap:wrap;justify-content:center;gap:.32em;padding:.45em .5em calc(.45em + env(safe-area-inset-bottom,0px))}
+    .controls button{min-height:46px;font-size:.82rem;padding:.5em .65em}
+    .controls .nav-btn{flex:1 1 0;min-width:0;font-size:.85rem;padding:.55em .35em}
+    #tuneBtn,#bgBtn,#sbBtn,#muteBtn,#darkBtn,#helpBtn{flex:0 0 auto;font-size:1.05rem;padding:.4em .55em;min-width:46px}
+    #tuneBtn .lbl,#bgBtn .lbl,#sbBtn .lbl{display:none}
+    .controls button[onclick="goFs()"]{flex:0 0 auto;min-width:46px;font-size:1.05rem;padding:.4em .55em}
+    .progress,.controls .spacer{display:none}
+    .stage{padding:2vh 4vw 17vh}
+    .opt{padding:.8em .9em}
+    .question{font-size:clamp(1.2rem,5vw,1.7rem)}
+    /* tiebreak-rijen stapelen op smal scherm */
+    #ur-root .ur-tbgrid{grid-template-columns:1fr;max-width:300px}
+  }
 </style>
 </head>
 <body>
@@ -365,15 +386,15 @@
 <div class="stage" id="stage"></div>
 
 <div class="controls">
-  <button onclick="prev()">← Vorige</button>
-  <button class="reveal-btn" onclick="toggleAnswer()" id="revealBtn">Toon antwoord</button>
-  <button onclick="next()">Volgende →</button>
+  <button class="nav-btn" onclick="prev()">← Vorige</button>
+  <button class="reveal-btn nav-btn" onclick="toggleAnswer()" id="revealBtn">Toon antwoord</button>
+  <button class="nav-btn" onclick="next()">Volgende →</button>
   <span class="spacer"></span>
   <span class="progress" id="prog"></span>
-  <button onclick="toggleTune()" id="tuneBtn" title="Rad van Fortuin-tune aan/uit">♪ Tune</button>
-  <button onclick="toggleBgMusic()" id="bgBtn" title="Achtergrond-playlist aan/uit — speelt door over alle pagina's">♬ Muziek</button>
+  <button onclick="toggleTune()" id="tuneBtn" title="Rad van Fortuin-tune aan/uit">♪ <span class="lbl">Tune</span></button>
+  <button onclick="toggleBgMusic()" id="bgBtn" title="Achtergrond-playlist aan/uit — speelt door over alle pagina's">♬ <span class="lbl">Muziek</span></button>
   <button onclick="toggleMuteAll()" id="muteBtn" title="Alle geluid dempen / aan">🔊</button>
-  <button onclick="toggleSoundboard()" id="sbBtn" title="Soundboard met geluidseffecten">🎛️ FX</button>
+  <button onclick="toggleSoundboard()" id="sbBtn" title="Soundboard met geluidseffecten">🎛️ <span class="lbl">FX</span></button>
   <button onclick="toggleDark()" id="darkBtn" title="Donker / licht (handig op de beamer)">🌙</button>
   <button onclick="goFs()" title="Volledig scherm">⛶</button>
   <button onclick="toggleHelp()" id="helpBtn" title="Sneltoetsen (toets ?)">❔</button>
@@ -423,7 +444,7 @@ const BGMUSIC = [
   "l4MlaMtRp7E"   // PawPaw Rod - I Wish
 ];
 let bgPlayer=null, bgWanted=false;
-function setBgBtn(){ var b=document.getElementById('bgBtn'); if(b) b.innerHTML = bgWanted ? '\u23f8 Muziek' : '\u266c Muziek'; }
+function setBgBtn(){ var b=document.getElementById('bgBtn'); if(b) b.innerHTML = bgWanted ? '\u23f8 <span class="lbl">Muziek</span>' : '\u266c <span class="lbl">Muziek</span>'; }
 function toggleBgMusic(){ var b=document.getElementById('bgBtn');
   if(!BGMUSIC.length){ if(b) b.innerHTML='\u266c (nog leeg)'; return; }
   if(!(window.YT&&window.YT.Player)){ if(b) b.innerHTML='\u266c laden\u2026'; return; }
@@ -440,12 +461,12 @@ function toggleTune(){
   if(!tunePlayer){
     if(!(window.YT&&window.YT.Player)){ if(btn)btn.textContent='♪ laden…'; return; }
     tunePlayer=new YT.Player('tuneplayer',{ videoId:TUNE, playerVars:{autoplay:1,controls:0,disablekb:1,loop:1,playlist:TUNE,playsinline:1},
-      events:{ onReady:e=>{ try{e.target.setVolume(35);e.target.playVideo();}catch(x){} tunePlaying=true; if(btn)btn.textContent='⏸ Tune'; },
+      events:{ onReady:e=>{ try{e.target.setVolume(35);e.target.playVideo();}catch(x){} tunePlaying=true; if(btn)btn.innerHTML='⏸ <span class="lbl">Tune</span>'; },
         onStateChange:e=>{ if(e.data===YT.PlayerState.ENDED){ try{e.target.playVideo();}catch(x){} } } } });
     return;
   }
-  if(tunePlaying){ try{tunePlayer.pauseVideo();}catch(x){} tunePlaying=false; if(btn)btn.textContent='♪ Tune'; }
-  else { try{tunePlayer.playVideo();}catch(x){} tunePlaying=true; if(btn)btn.textContent='⏸ Tune'; }
+  if(tunePlaying){ try{tunePlayer.pauseVideo();}catch(x){} tunePlaying=false; if(btn)btn.innerHTML='♪ <span class="lbl">Tune</span>'; }
+  else { try{tunePlayer.playVideo();}catch(x){} tunePlaying=true; if(btn)btn.innerHTML='⏸ <span class="lbl">Tune</span>'; }
 }
 function toggleDark(){ const d=document.body.classList.toggle('dark'); const b=document.getElementById('darkBtn'); if(b) b.textContent=d?'☀️':'🌙'; }
 const GATE_PIN="062026";
@@ -483,7 +504,7 @@ function buildSoundboard(){
   h+='<button class="sb-stop" onclick="stopSound()">0 &middot; ⏹ Stop</button></div>';
   el.innerHTML=h;
 }
-function toggleSoundboard(){ sbOpen=!sbOpen; const el=document.getElementById('soundboard'); const b=document.getElementById('sbBtn'); if(el){ el.classList.toggle('open',sbOpen); el.setAttribute('aria-hidden', String(!sbOpen)); } if(b)b.textContent=sbOpen?'🎛️ FX ▼':'🎛️ FX'; }
+function toggleSoundboard(){ sbOpen=!sbOpen; const el=document.getElementById('soundboard'); const b=document.getElementById('sbBtn'); if(el){ el.classList.toggle('open',sbOpen); el.setAttribute('aria-hidden', String(!sbOpen)); } if(b)b.innerHTML=sbOpen?'🎛️ <span class="lbl">FX ▼</span>':'🎛️ <span class="lbl">FX</span>'; }
 function playSound(i){
   const s=SOUNDS[i]; if(!s) return;
   if(s.audio){ // los mp3-bestand uit /media (same-origin)
@@ -922,10 +943,10 @@ window.TI=(function(){
 })();
 window.UR=(function(){
   var COLS=['#e23b2e','#2438c8','#f5b417','#1aa39a','#181320','#ee7b30'];
-  var rows=null,ptr=-1,tbDone=false,tbNames=null,TB_ANSWER=1120;
+  var rows=null,ptr=-1,tbDone=false,tbNames=null,TB_ANSWER=1120,tbBanner='';
   function $(id){return document.getElementById(id);}
   function teams(){return (window.QUIZ_TEAMS&&window.QUIZ_TEAMS.length)?window.QUIZ_TEAMS:[{name:'Team 1'},{name:'Team 2'},{name:'Team 3'},{name:'Team 4'},{name:'Team 5'},{name:'Team 6'}];}
-  function init(){tbDone=false;tbNames=null;rows=null;ptr=-1;var T=teams(),g=$('ur-grid'),h='';
+  function init(){tbDone=false;tbNames=null;tbBanner='';rows=null;ptr=-1;var T=teams(),g=$('ur-grid'),h='';
     T.forEach(function(t,i){h+='<div class="ur-card uc'+(i%6)+'"><div class="ur-bar">'+(t.name||('Team '+(i+1)))+'</div>'+(t.members?'<div class="ur-mem">'+t.members.join(' · ')+'</div>':'')+'<input class="ur-score masked" type="text" inputmode="numeric" autocomplete="off" data-i="'+i+'" placeholder="•••"></div>';});
     g.innerHTML=h;$('ur-input').style.display='flex';$('ur-result').style.display='none';$('ur-result').innerHTML='';var pk=$('ur-peek');if(pk)pk.textContent='👁 Toon punten';}
   function peek(){var revealed=false;document.querySelectorAll('#ur-grid .ur-score').forEach(function(inp){inp.classList.toggle('masked');revealed=!inp.classList.contains('masked');});var pk=$('ur-peek');if(pk)pk.textContent=revealed?'🙈 Verberg punten':'👁 Toon punten';}
@@ -937,10 +958,11 @@ window.UR=(function(){
     if(tied.length>1 && top>0){ tiebreakForm(tied); return; }
     buildReveal();}
   function tiebreakForm(tied){
-    var h='<div class="ur-tb"><div class="ur-tbh">🤝 Gelijkspel aan kop — tiebreak!</div>'
-      +'<p class="ur-tbp">Schatvraag: <b>hoeveel gram weegt een volle fles Salmari?</b><br>Elk team vult een schatting van 4 cijfers in &mdash; dichtstbij wint.</p>';
-    tied.forEach(function(r,i){h+='<div class="ur-tbrow"><label class="uc'+r.ci+'">'+r.name+'</label><input class="ur-tbguess" data-i="'+i+'" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000"></div>';});
-    h+='<div class="ur-ctrls"><button onclick="UR.resolveTiebreak()">Bepaal winnaar →</button><button class="ghost" onclick="UR.init()">↩ Aanpassen</button></div></div>';
+    var h='<div class="ur-tb"><span class="ur-tbkick">🤝 Gelijkspel aan kop</span><h2 class="ur-tbh">Tiebreak</h2>'
+      +'<p class="ur-tbp">Schatvraag: <b>hoeveel gram weegt een volle fles Salmari?</b><br>Vul per team een schatting van 4 cijfers in &mdash; dichtstbij wint.</p>'
+      +'<div class="ur-tbgrid">';
+    tied.forEach(function(r,i){h+='<div class="ur-card uc'+r.ci+' ur-tbcard"><div class="ur-bar">'+r.name+'</div><input class="ur-tbguess" data-i="'+i+'" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="????"></div>';});
+    h+='</div><div class="ur-ctrls"><button onclick="UR.resolveTiebreak()">Bepaal winnaar →</button><button class="ghost" onclick="UR.init()">↩ Aanpassen</button></div></div>';
     $('ur-result').innerHTML=h; tbNames=tied.map(function(r){return r.name;});}
   function resolveTiebreak(){
     var res=$('ur-result'), correct=TB_ANSWER, guesses=[];
@@ -950,13 +972,14 @@ window.UR=(function(){
     var inTie={}; order.forEach(function(o){inTie[o.name]=true;});
     var winners=[]; order.forEach(function(o){var r=rows.find(function(x){return x.name===o.name;});if(r)winners.push(r);});
     var rest=rows.filter(function(r){return !inTie[r.name];});
+    tbBanner='<div class="ur-tbres">🤝 <b>Tiebreak</b> &mdash; een volle fles Salmari weegt <b>'+correct+' g</b>. Dichtstbij wint.<div class="ur-tbres-l">'+order.map(function(o,i){var gi=(tbNames||[]).indexOf(o.name);var gv=guesses[gi];return '<span'+(i===0?' class="tbwin"':'')+'>'+o.name+': '+(isNaN(gv)?'\u2014':gv+' g')+' ('+(o.d===Infinity?'?':'\u00b1'+o.d)+')</span>';}).join('')+'</div></div>';
     rows=winners.concat(rest); tbDone=true; buildReveal();}
   function buildReveal(){
     var ranks=[];rows.forEach(function(r,i){ranks[i]=(!tbDone && i>0 && r.score===rows[i-1].score)?ranks[i-1]:(i+1);});
     var h='<ol class="ur-rank">';
     rows.forEach(function(r,idx){h+='<li class="ur-li" id="url-'+idx+'"><span class="ur-pos">'+(ranks[idx]===1?'🏆':ranks[idx])+'</span><span class="ur-blank">— — —</span></li>';});
     h+='</ol><div class="ur-ctrls"><button id="ur-next" onclick="UR.step()">Onthul de laatste plaats →</button><button class="ghost" onclick="UR.init()">↩ Aanpassen</button></div>';
-    $('ur-result').innerHTML=h; ptr=rows.length-1;}
+    $('ur-result').innerHTML=(tbDone?tbBanner:'')+h; ptr=rows.length-1;}
   function step(){if(!rows||ptr<0)return;var r=rows[ptr],li=$('url-'+ptr),b=li.querySelector('.ur-blank');
     if(b)b.outerHTML='<span class="ur-name uc'+r.ci+'">'+r.name+'</span><span class="ur-pts">'+r.score+'</span>';
     li.classList.add('shown');var isWin=tbDone?(ptr===0):(rows[0].score>0&&r.score===rows[0].score);if(isWin)li.classList.add('win');if(ptr===0){burst();}

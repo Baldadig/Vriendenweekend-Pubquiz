@@ -270,7 +270,7 @@
   #ti-root .ti-namecard .ti-mem{font-family:var(--body);font-size:.72rem;color:#6f6757;padding:0 10px 8px;line-height:1.2}
   @media(max-width:780px){ .ti-namegrid{grid-template-columns:1fr 1fr} }
   /* uitslag / winnaar-reveal */
-  #ur-root{height:100%;display:flex;flex-direction:column;min-height:0;color:var(--ink);text-align:center}
+  #ur-root{height:100%;display:flex;flex-direction:column;justify-content:center;min-height:0;gap:1.3vh;color:var(--ink);text-align:center;overflow-y:auto}
   #ur-root .ur-stripe{flex:none;height:6px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--red) 0 18px,var(--blue) 18px 36px,var(--yellow) 36px 54px,var(--ink) 54px 72px)}
   #ur-root .ur-head{flex:none;margin:.4vh 0 .3vh}
   #ur-root .ur-kicker{display:inline-block;font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.2em;font-size:clamp(.55rem,1.4vh,.72rem);background:var(--yellow);color:var(--ink);border:2px solid var(--ink);border-radius:5px;padding:2px 11px;transform:rotate(-1.5deg)}
@@ -278,7 +278,7 @@
   #ur-root button{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;border:3px solid var(--ink);border-radius:9px;padding:.5em 1.4em;font-size:clamp(.85rem,1.9vh,1.05rem);color:#fff;background:var(--red);box-shadow:4px 4px 0 var(--ink);transition:.12s}
   #ur-root button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
   #ur-root button.ghost{background:var(--paper2);color:var(--ink);font-size:.78rem;box-shadow:3px 3px 0 var(--ink);padding:.42em .95em}
-  #ur-input{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1vh}
+  #ur-input{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.1vh}
   #ur-root .ur-sub{font-family:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.82rem;color:#6f6757}
   .ur-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:920px;width:100%}
   #ur-root .ur-card{background:var(--paper2);border:3px solid var(--ink);border-radius:11px;box-shadow:4px 4px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column}
@@ -291,7 +291,7 @@
   #ur-root .uc3 .ur-bar,#ur-root .uc3.ur-name{background:var(--teal);color:#fff}
   #ur-root .uc4 .ur-bar,#ur-root .uc4.ur-name{background:var(--ink);color:#fff}
   #ur-root .uc5 .ur-bar,#ur-root .uc5.ur-name{background:#ee7b30;color:var(--ink)}
-  #ur-result{flex:1;min-height:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1vh}
+  #ur-result{flex:none;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.1vh}
   .ur-rank{list-style:none;display:flex;flex-direction:column;gap:7px;width:min(560px,92%);margin:0 auto}
   #ur-root .ur-rank li{display:flex;align-items:center;gap:10px;background:var(--paper2);border:2.5px solid var(--ink);border-radius:9px;box-shadow:3px 3px 0 var(--ink);padding:6px 10px;animation:tiNameIn .3s ease both}
   #ur-root .ur-rank li.win{border-width:4px;box-shadow:5px 5px 0 var(--ink);transform:scale(1.03)}
@@ -361,17 +361,19 @@
   }
   /* ===== Mobiel (iPhone) — knopplaatsing & fijnafstemming ===== */
   @media(max-width:600px){
-    .controls{flex-wrap:wrap;justify-content:center;gap:.32em;padding:.45em .5em calc(.45em + env(safe-area-inset-bottom,0px))}
-    .controls button{min-height:46px;font-size:.82rem;padding:.5em .65em}
-    .controls .nav-btn{flex:1 1 0;min-width:0;font-size:.85rem;padding:.55em .35em}
-    #tuneBtn,#bgBtn,#sbBtn,#muteBtn,#darkBtn,#helpBtn{flex:0 0 auto;font-size:1.05rem;padding:.4em .55em;min-width:46px}
+    .controls{flex-wrap:wrap;justify-content:center;align-items:stretch;gap:.35em;padding:.45em .45em calc(.5em + env(safe-area-inset-bottom,0px))}
+    .controls button{min-height:46px;font-size:.8rem;padding:.45em .5em;box-shadow:2px 2px 0 var(--ink)}
+    /* rij 1: Vorige / Toon antwoord / Volgende — gelijk verdeeld */
+    .controls .nav-btn{flex:1 1 0;min-width:0;min-height:48px;font-size:.84rem;padding:.5em .3em;line-height:1.05}
+    /* spacer forceert een regelbreuk -> iconen naar rij 2 */
+    .controls .spacer{display:block;flex:1 0 100%;height:0;min-height:0;margin:0;padding:0;border:0;box-shadow:none}
+    .progress{display:none}
+    /* rij 2: compacte, gelijke iconen */
+    #tuneBtn,#bgBtn,#sbBtn,#muteBtn,#darkBtn,#helpBtn,.controls button[onclick="goFs()"]{flex:0 0 auto;min-width:44px;min-height:44px;font-size:1.05rem;padding:.35em .4em}
     #tuneBtn .lbl,#bgBtn .lbl,#sbBtn .lbl{display:none}
-    .controls button[onclick="goFs()"]{flex:0 0 auto;min-width:46px;font-size:1.05rem;padding:.4em .55em}
-    .progress,.controls .spacer{display:none}
-    .stage{padding:2vh 4vw 17vh}
+    .stage{padding:2vh 4vw 16vh}
     .opt{padding:.8em .9em}
     .question{font-size:clamp(1.2rem,5vw,1.7rem)}
-    /* tiebreak-rijen stapelen op smal scherm */
     #ur-root .ur-tbgrid{grid-template-columns:1fr;max-width:300px}
   }
 </style>
@@ -979,12 +981,12 @@ window.UR=(function(){
     var h='<ol class="ur-rank">';
     rows.forEach(function(r,idx){h+='<li class="ur-li" id="url-'+idx+'"><span class="ur-pos">'+(ranks[idx]===1?'🏆':ranks[idx])+'</span><span class="ur-blank">— — —</span></li>';});
     h+='</ol><div class="ur-ctrls"><button id="ur-next" onclick="UR.step()">Onthul de laatste plaats →</button><button class="ghost" onclick="UR.init()">↩ Aanpassen</button></div>';
-    $('ur-result').innerHTML=(tbDone?tbBanner:'')+h; ptr=rows.length-1;}
+    $('ur-result').innerHTML=h; ptr=rows.length-1;}
   function step(){if(!rows||ptr<0)return;var r=rows[ptr],li=$('url-'+ptr),b=li.querySelector('.ur-blank');
     if(b)b.outerHTML='<span class="ur-name uc'+r.ci+'">'+r.name+'</span><span class="ur-pts">'+r.score+'</span>';
     li.classList.add('shown');var isWin=tbDone?(ptr===0):(rows[0].score>0&&r.score===rows[0].score);if(isWin)li.classList.add('win');if(ptr===0){burst();}
     ptr--;var btn=$('ur-next');
-    if(ptr<0){btn.style.display='none';}else if(ptr===0){btn.textContent='🥁 Onthul de WINNAAR!';}else{btn.textContent='Volgende plaats →';}}
+    if(ptr<0){btn.style.display='none'; if(tbDone&&tbBanner){$('ur-result').insertAdjacentHTML('afterbegin',tbBanner);tbBanner='';}}else if(ptr===0){btn.textContent='🥁 Onthul de WINNAAR!';}else{btn.textContent='Volgende plaats →';}}
   function burst(){var cv=$('ur-cv');if(!cv)return;cv.style.display='block';var ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
     var P=[];for(var i=0;i<200;i++){var a=Math.random()*Math.PI*2,sp=4+Math.random()*10;
       P.push({x:innerWidth/2,y:innerHeight*0.28,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-3,w:6+Math.random()*7,h:8+Math.random()*9,c:COLS[i%6],r:Math.random()*6.28,vr:-0.3+Math.random()*0.6,life:1});}
@@ -1077,6 +1079,7 @@ function render(){
         <div class="ur-ctrls"><button class="ghost" id="ur-peek" onclick="UR.peek()">👁 Toon punten</button><button onclick="UR.reveal()">🥁 Naar de onthulling →</button></div>
       </div>
       <div id="ur-result"></div>
+      <div class="ur-stripe"></div>
       <canvas id="ur-cv"></canvas>
     </div></div>`;
   } else if(s.type==='end'){

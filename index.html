@@ -249,7 +249,11 @@
   #ti-root .ti-team li.in{animation:tiNameIn .34s ease both}
   @keyframes tiNameIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   #ti-cv{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60;display:none}
-  @media(max-width:780px){ #ti-wheelView{flex-direction:column;gap:1.4vh} #ti-root .ti-wheelwrap{width:min(70vw,300px)} }
+  @media(max-width:780px){
+    #ti-wheelView{flex-direction:column;gap:1.6vh;align-items:stretch}
+    #ti-root .ti-wheelwrap{width:min(78vw,330px)}
+    #ti-root #ti-grid{flex:none;width:100%;max-width:560px;margin:0 auto;align-content:start;gap:11px}
+  }
   /* ---- typografie team-maken ---- */
   #ti-selectView{gap:2.2vh;justify-content:center}
   #ti-root .ti-titleblock{display:flex;flex-direction:column;align-items:center;gap:.5em}

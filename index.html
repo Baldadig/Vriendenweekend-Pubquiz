@@ -777,8 +777,9 @@ window.TI=(function(){
   }
   function chipHTML(name,cls){present[name]=true;return '<span class="ti-chip on'+(cls?' '+cls:'')+'" data-n="'+name+'" onclick="TI.toggleChip(this)"><span class="ti-tick">✓</span>'+name+(cls==='added'?' <span class="ti-rm" onclick="event.stopPropagation();TI.removeChip(this)">×</span>':'')+'</span>';}
   function buildChips(){present={};var c=$('ti-chips'),html='';
-    COUPLES.forEach(function(p){html+=chipHTML(p[0])+chipHTML(p[1]);});
-    SINGLES.forEach(function(sg){html+=chipHTML(sg);});
+    var __all=[]; COUPLES.forEach(function(p){__all.push(p[0],p[1]);}); SINGLES.forEach(function(sg){__all.push(sg);});
+    __all.sort(function(a,b){return a.localeCompare(b,'nl',{sensitivity:'base'});});
+    __all.forEach(function(n){html+=chipHTML(n);});
     c.innerHTML=html;var to=$('ti-teamopts'),h='';[3,4,5,6].forEach(function(n){h+='<span class="ti-opt'+(n===6?' sel':'')+'" data-t="'+n+'" onclick="TI.setTeams('+n+')">'+n+'</span>';});to.innerHTML=h;}
   function presentList(){return Object.keys(present).filter(function(n){return present[n];});}
   function updateCount(){var people=presentList(),c=people.length;$('ti-count').textContent=c+' speler'+(c===1?'':'s');

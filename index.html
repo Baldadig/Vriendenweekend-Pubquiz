@@ -154,6 +154,8 @@
   .soundboard .sb-x{border:2px solid var(--ink);border-radius:5px;background:var(--paper);font-family:var(--head);font-weight:700;cursor:pointer;line-height:1;padding:2px 7px;color:var(--ink)}
   .soundboard .sb-grid{display:grid;grid-template-columns:repeat(3,minmax(86px,1fr));gap:7px}
   .soundboard .sb-grid button{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.02em;font-size:.66rem;color:var(--ink);background:var(--paper);border:2.5px solid var(--ink);border-radius:8px;box-shadow:2px 2px 0 var(--ink);padding:7px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1.05;text-align:center;transition:.1s}
+.sb-grid button{position:relative}
+.sb-key{position:absolute;top:2px;right:4px;font-family:var(--pop);font-size:.58rem;color:var(--paper);background:var(--ink);border-radius:4px;padding:.05em .35em;line-height:1.3}
   .soundboard .sb-grid button:hover{background:#fff;transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
   .soundboard .sb-grid button:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
   .soundboard .sb-grid button .em{font-size:1.35rem}
@@ -417,8 +419,8 @@ let sbPlayer=null, sbReady=false, sbPending=null, sbOpen=false, sbAudio=null;
 function buildSoundboard(){
   const el=document.getElementById('soundboard'); if(!el) return;
   let h='<div class="sb-head"><span>🔊 Soundboard</span><button class="sb-x" onclick="toggleSoundboard()" title="Sluiten">✕</button></div><div class="sb-grid">';
-  SOUNDS.forEach((s,i)=>{ h+='<button onclick="playSound('+i+')"><span class="em">'+s.e+'</span>'+s.n+'</button>'; });
-  h+='<button class="sb-stop" onclick="stopSound()">⏹ Stop</button></div>';
+  SOUNDS.forEach((s,i)=>{ var k=(i<9)?'<span class="sb-key">'+(i+1)+'</span>':''; h+='<button onclick="playSound('+i+')">'+k+'<span class="em">'+s.e+'</span>'+s.n+'</button>'; });
+  h+='<button class="sb-stop" onclick="stopSound()">0 &middot; ⏹ Stop</button></div>';
   el.innerHTML=h;
 }
 function toggleSoundboard(){ sbOpen=!sbOpen; const el=document.getElementById('soundboard'); const b=document.getElementById('sbBtn'); if(el){ el.classList.toggle('open',sbOpen); el.setAttribute('aria-hidden', String(!sbOpen)); } if(b)b.textContent=sbOpen?'🎛️ FX ▼':'🎛️ FX'; }
@@ -1065,6 +1067,8 @@ document.addEventListener('keydown',e=>{
   else if(e.key.toLowerCase()==='a'||e.key==='Enter'||e.key==='ArrowDown'){e.preventDefault();toggleAnswer();}
   else if(e.key.toLowerCase()==='f'){goFs();}
   else if(e.key.toLowerCase()==='b'){e.preventDefault();toggleBlackout();}
+  else if(/^[1-9]$/.test(e.key)){ var __si=+e.key-1; if(typeof SOUNDS!=='undefined' && __si<SOUNDS.length){ e.preventDefault(); playSound(__si); } }
+  else if(e.key==='0'){ e.preventDefault(); if(typeof stopSound==='function') stopSound(); }
 });
 // ---- swipe-navigatie (touch) ----
 (function(){

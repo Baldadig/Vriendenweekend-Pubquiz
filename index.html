@@ -402,24 +402,24 @@ function checkGate(){
 })();
 // ---- Soundboard (inklapbaar, one-shot geluidseffecten) ----
 const SOUNDS=[
-  {e:"🐐",n:"Gillende geit",id:"X78GyIfrSV4"},
-  {e:"📷",n:"Camera",audio:"media/wm-camera.mp3"},
-  {e:"😂",n:"Lachband",id:"3IC76o_lhFw"},
-  {e:"🛗",n:"Liftmuziek",id:"xy_NKN75Jhw"},
-  {e:"📦",n:"Metal Gear",id:"29ayN0ExAFw"},
-  {e:"👏",n:"Applaus",id:"B7w4DrAmSS8"},
-  {e:"📺",n:"Zo terug",id:"J85jV37CsYE"},
-  {e:"🎺",n:"Sad trombone",id:"CQeezCdF4mk"},
-  {e:"📢",n:"DJ airhorn",id:"8G4ye7_2ZR0"},
-  {e:"👋",n:"Daaaag",audio:"media/wm-daaag.mp3"},
-  {e:"❌",n:"Mission failed",id:"1IrRau8Q8mw"},
-  {e:"😱",n:"Aahhhh",id:"ewGwngOFsXk"}
+  {e:"🐐",n:"Gillende geit",id:"X78GyIfrSV4",k:"g"},
+  {e:"📷",n:"Camera",audio:"media/wm-camera.mp3",k:"c"},
+  {e:"😂",n:"Lachband",id:"3IC76o_lhFw",k:"l"},
+  {e:"🛗",n:"Liftmuziek",id:"xy_NKN75Jhw",k:"i"},
+  {e:"📦",n:"Metal Gear",id:"29ayN0ExAFw",k:"m"},
+  {e:"👏",n:"Applaus",id:"B7w4DrAmSS8",k:"k"},
+  {e:"📺",n:"Zo terug",id:"J85jV37CsYE",k:"z"},
+  {e:"🎺",n:"Sad trombone",id:"CQeezCdF4mk",k:"t"},
+  {e:"📢",n:"DJ airhorn",id:"8G4ye7_2ZR0",k:"h"},
+  {e:"👋",n:"Daaaag",audio:"media/wm-daaag.mp3",k:"d"},
+  {e:"❌",n:"Mission failed",id:"1IrRau8Q8mw",k:"x"},
+  {e:"😱",n:"Aahhhh",id:"ewGwngOFsXk",k:"s"}
 ];
 let sbPlayer=null, sbReady=false, sbPending=null, sbOpen=false, sbAudio=null;
 function buildSoundboard(){
   const el=document.getElementById('soundboard'); if(!el) return;
   let h='<div class="sb-head"><span>🔊 Soundboard</span><button class="sb-x" onclick="toggleSoundboard()" title="Sluiten">✕</button></div><div class="sb-grid">';
-  SOUNDS.forEach((s,i)=>{ var k=(i<9)?'<span class="sb-key">'+(i+1)+'</span>':''; h+='<button onclick="playSound('+i+')">'+k+'<span class="em">'+s.e+'</span>'+s.n+'</button>'; });
+  SOUNDS.forEach((s,i)=>{ var k=s.k?'<span class="sb-key">'+s.k.toUpperCase()+'</span>':''; h+='<button onclick="playSound('+i+')">'+k+'<span class="em">'+s.e+'</span>'+s.n+'</button>'; });
   h+='<button class="sb-stop" onclick="stopSound()">0 &middot; ⏹ Stop</button></div>';
   el.innerHTML=h;
 }
@@ -1067,8 +1067,8 @@ document.addEventListener('keydown',e=>{
   else if(e.key.toLowerCase()==='a'||e.key==='Enter'||e.key==='ArrowDown'){e.preventDefault();toggleAnswer();}
   else if(e.key.toLowerCase()==='f'){goFs();}
   else if(e.key.toLowerCase()==='b'){e.preventDefault();toggleBlackout();}
-  else if(/^[1-9]$/.test(e.key)){ var __si=+e.key-1; if(typeof SOUNDS!=='undefined' && __si<SOUNDS.length){ e.preventDefault(); playSound(__si); } }
   else if(e.key==='0'){ e.preventDefault(); if(typeof stopSound==='function') stopSound(); }
+  else if(typeof SOUNDS!=='undefined' && e.key.length===1){ var __k=e.key.toLowerCase(); var __i=SOUNDS.findIndex(function(s){return s.k===__k;}); if(__i>=0){ e.preventDefault(); playSound(__i); } }
 });
 // ---- swipe-navigatie (touch) ----
 (function(){

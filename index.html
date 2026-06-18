@@ -389,7 +389,8 @@
   }
   button:focus-visible,input:focus-visible,[onclick]:focus-visible,.ti-chip:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
   .ans-media{display:none}
-  .slide.reveal .ans-media{display:flex}
+  .slide.reveal .ans-media{display:flex;animation:ansIn .36s cubic-bezier(.22,.7,.2,1) both}
+  @keyframes ansIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
   .slide.reveal .sb,.slide.reveal .spot{display:none}
 </style>
 </head>

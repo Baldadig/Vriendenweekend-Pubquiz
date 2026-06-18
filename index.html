@@ -388,6 +388,9 @@
     *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
   }
   button:focus-visible,input:focus-visible,[onclick]:focus-visible,.ti-chip:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+  .ans-media{display:none}
+  .slide.reveal .ans-media{display:flex}
+  .slide.reveal .sb,.slide.reveal .spot{display:none}
 </style>
 </head>
 <body>
@@ -600,27 +603,27 @@ const ROUNDS = [
     intro:"Luister, herken, antwoord — plus enkele vragen over de festivals van toen.",
     music:true,
     qs:[
-      { q:"Track 1 — uit welk album van Kendrick Lamar (2015) komt dit nummer?",
+      { q:"Track 1 — uit welk album van Kendrick Lamar (2015) komt dit nummer?", ansImg:"fotos/antwoord/muziek1.jpg",
         o:["To Pimp a Butterfly", "good kid, m.A.A.d city", "DAMN.", "Mr. Morale & the Big Steppers"], correct:0, yt:"CqL0I0CcNuI",
         note:"<b>To Pimp a Butterfly</b> (2015) – 'King Kunta'." },
       { q:"Festival — in welk jaar headlinede Kendrick Lamar Lowlands, samen met Gorillaz en The War on Drugs?",
         o:["2016", "2017", "2019", "2018"], correct:3, note:"<b>2018</b>. Kendrick een jaar na 'DAMN.'." },
-      { q:"Track 2 — welke rapper bracht in 2016 het gratis album 'Coloring Book' uit, met deze track?",
+      { q:"Track 2 — welke rapper bracht in 2016 het gratis album 'Coloring Book' uit, met deze track?", ansImg:"fotos/antwoord/muziek2.jpg",
         o:["Vic Mensa", "Chance the Rapper", "Childish Gambino", "Mac Miller"], correct:1, yt:"pqRlp5gakA0",
         note:"<b>Chance the Rapper</b> – 'All Night'." },
-      { q:"Track 3 — James Blake brak door met deze versie (2011). Wie schreef en zong het origineel?",
+      { q:"Track 3 — James Blake brak door met deze versie (2011). Wie schreef en zong het origineel?", ansImg:"fotos/antwoord/muziek3.jpg",
         o:["Adele", "Lykke Li", "Feist", "Bon Iver"], correct:2, yt:"oOT2-OTebx0",
         note:"Het origineel 'Limit to Your Love' is van <b>Feist</b> (2007)." },
       { q:"Festival — Lowlands 2012 was de warmste editie ooit. Welke band stopte vanwege de hitte eerder met spelen?",
         o:["Muse", "Arctic Monkeys", "Queens of the Stone Age", "Foo Fighters"], correct:3,
         note:"<b>Foo Fighters</b> stopten na twee uur ipv de geplande 2,5 uur." },
-      { q:"Track 4 — welke rapster scoorde in 2001 een hit met 'Who's That Girl?'?",
+      { q:"Track 4 — welke rapster scoorde in 2001 een hit met 'Who's That Girl?'?", ansImg:"fotos/antwoord/muziek4.jpg",
         o:["Missy Elliott", "Lil' Kim", "Eve", "Foxy Brown"], correct:2, yt:"8N9PL3Iz3xc",
         note:"<b>Eve</b> – 'Who's That Girl?', van het album 'Scorpion'." },
-      { q:"Track 5 — Rihanna scoorde in 2011 deze wereldhit. Met welke dj/producer maakte ze 'm?",
+      { q:"Track 5 — Rihanna scoorde in 2011 deze wereldhit. Met welke dj/producer maakte ze 'm?", ansImg:"fotos/antwoord/muziek5.jpg",
         o:["David Guetta", "Calvin Harris", "Avicii", "Zedd"], correct:1, yt:"n6N1_sxlBU8",
         note:"<b>Calvin Harris</b> – 'We Found Love' (2011), met Rihanna." },
-      { q:"Track 6 — tijdens een optreden riep deze artiest iets naar óns publiek. Wat?",
+      { q:"Track 6 — tijdens een optreden riep deze artiest iets naar óns publiek. Wat?", ansImg:"fotos/antwoord/muziek6.jpg",
         o:["Ooooh. Balloons!", "Ooooh. Beer!", "Ooooh. Titties!", "Ooooh. Croissants!"], correct:0, yt:"hFP3qh1x1Zo",
         note:"<b>Jack Garratt – 'Worry'</b>. 'Ooooh. Balloons!'" },
     ]
@@ -629,28 +632,28 @@ const ROUNDS = [
     title:"Film", emoji:"🎬", num:3, pauseAfter:true,
     intro:"Een filmronde op gehoor. Welke film hoor je?",
     qs:[
-      { q:"Audio — welke componist schreef dit thema, én dat van Jurassic Park, E.T. en Indiana Jones?",
+      { q:"Audio — welke componist schreef dit thema, én dat van Jurassic Park, E.T. en Indiana Jones?", ansImg:"fotos/antwoord/film1.jpg",
         o:["Hans Zimmer", "John Williams", "Danny Elfman", "James Horner"], correct:1, yt:"NR8XZkGwfA0",
         note:"<b>John Williams</b> — hoofdthema van Star Wars (1977)." },
-      { q:"Audio — voor welke film in de Rocky-reeks werd dit nummer geschreven?",
+      { q:"Audio — voor welke film in de Rocky-reeks werd dit nummer geschreven?", ansImg:"fotos/antwoord/film2.jpg",
         o:["Rocky II", "Rocky IV", "Creed", "Rocky III"], correct:3, yt:"btPJPFnesV4",
         note:"<b>Rocky III</b> (1982) — 'Eye of the Tiger' van de band Survivor." },
-      { q:"Audio — in welke Tarantino-film wordt dit deuntje gefloten?",
+      { q:"Audio — in welke Tarantino-film wordt dit deuntje gefloten?", ansImg:"fotos/antwoord/film3.jpg",
         o:["Kill Bill", "Pulp Fiction", "Death Proof", "Jackie Brown"], correct:0, yt:"qyVOAqXtIYM",
         note:"<b>Kill Bill</b> — 'Twisted Nerve' (Bernard Herrmann), gefloten door Elle Driver." },
-      { q:"Audio — uit welke film komt deze beroemde quote?",
+      { q:"Audio — uit welke film komt deze beroemde quote?", ansImg:"fotos/antwoord/film4.jpg",
         o:["JFK", "The Firm", "A Few Good Men", "Philadelphia"], correct:2, yt:"tAwNbmDYztQ",
         note:"<b>A Few Good Men</b> (1992) — Jack Nicholson: 'You can't handle the truth!'" },
-      { q:"Audio — uit welke film komt deze zin?",
+      { q:"Audio — uit welke film komt deze zin?", ansImg:"fotos/antwoord/film5.jpg",
         o:["Back to the Future", "Ghostbusters", "Gremlins", "E.T."], correct:0, yt:"G3AfIvJBcGo",
         note:"<b>Back to the Future</b> (1985) — Doc Brown: 'Roads? Where we're going, we don't need roads.'" },
-      { q:"Audio — wat doet koning Leonidas terwijl hij dit roept?",
+      { q:"Audio — wat doet koning Leonidas terwijl hij dit roept?", ansImg:"fotos/antwoord/film6.jpg",
         o:["Gooit een speer", "Schopt de Perzische boodschapper in een put", "Steekt een vuur aan", "Slaat op zijn schild"], correct:1, yt:"L7QYwigIJt8",
         note:"Hij <b>schopt de Perzische boodschapper in de put</b> — 'THIS IS SPARTA!' uit 300 (2006)." },
-      { q:"Audio — welke acteur zegt deze beroemde zin in Jurassic Park?",
+      { q:"Audio — welke acteur zegt deze beroemde zin in Jurassic Park?", ansImg:"fotos/antwoord/film7.jpg",
         o:["Sam Neill", "Richard Attenborough", "Jeff Goldblum", "Wayne Knight"], correct:2, yt:"kiVVzxoPTtg",
         note:"<b>Jeff Goldblum</b> als dr. Ian Malcolm: 'Life finds a way.'" },
-      { q:"Audio — Maximus maakt zich bekend in de arena. Tegen welk personage zegt hij dit?",
+      { q:"Audio — Maximus maakt zich bekend in de arena. Tegen welk personage zegt hij dit?", ansImg:"fotos/antwoord/film8.jpg",
         o:["Marcus Aurelius", "Proximo", "Gracchus", "Commodus"], correct:3, yt:"I25Wp6ZLk7Y",
         note:"<b>Commodus</b> (Joaquin Phoenix) — de keizer die Maximus' vrouw en zoon liet vermoorden. 'Marcus Aurelius', de overleden keizer die Maximus diende, is de instinker — die naam valt in de speech zelf. Uit Gladiator (2000)." },
     ]
@@ -659,16 +662,16 @@ const ROUNDS = [
     title:"Sport · Oranje", emoji:"🇳🇱", num:4, short:"Sport",
     intro:"Vier vragen over het Nederlands elftal — want het is WK.",
     qs:[
-      { q:"Audio — in welk stadion scoorde Bergkamp tegen Argentinië (WK 1998)?",
+      { q:"Audio — in welk stadion scoorde Bergkamp tegen Argentinië (WK 1998)?", ansImg:"fotos/antwoord/sport1.jpg",
         o:["Stade Vélodrome, Marseille", "Parc des Princes, Parijs", "Stade de Gerland, Lyon", "Stade de France, Saint-Denis"], correct:0, yt:"fE3hNzm12DI",
         note:"<b>Stade Vélodrome, Marseille</b> (4 juli 1998, 90e minuut). 'Dennis Bergkamp! Dennis Bergkamp!' — Jack van Gelder." },
-      { q:"Wie was de doelman van Oranje op het WK 2022 in Qatar?",
+      { q:"Wie was de doelman van Oranje op het WK 2022 in Qatar?", ansImg:"fotos/antwoord/sport2.jpg",
         o:["Jasper Cillessen", "Justin Bijlow", "Andries Noppert", "Mark Flekken"], correct:2,
         note:"<b>Andries Noppert</b> — de verrassingskeuze van Van Gaal; maakte zijn debuut meteen op het WK in Qatar (2022)." },
-      { q:"Welke bondscoach loodste Oranje naar de WK-finale van 2010 in Zuid-Afrika?",
+      { q:"Welke bondscoach loodste Oranje naar de WK-finale van 2010 in Zuid-Afrika?", ansImg:"fotos/antwoord/sport3.jpg",
         o:["Louis van Gaal", "Dick Advocaat", "Guus Hiddink", "Bert van Marwijk"], correct:3,
         note:"<b>Bert van Marwijk</b>. In de finale verloor Oranje met 1-0 van Spanje (Iniesta)." },
-      { q:"Wie gaf de assist bij de zweefkopgoal van Van Persie tegen Spanje (WK 2014)?",
+      { q:"Wie gaf de assist bij de zweefkopgoal van Van Persie tegen Spanje (WK 2014)?", ansImg:"fotos/antwoord/sport4.jpg",
         o:["Wesley Sneijder", "Daley Blind", "Arjen Robben", "Georginio Wijnaldum"], correct:1,
         note:"<b>Daley Blind</b> met een lange bal; Van Persie dook erin — de gelijkmaker in de 5-1 tegen Spanje (2014)." },
     ]
@@ -1107,7 +1110,7 @@ function render(){
       <div class="stripe" style="margin-top:.9em"></div>
     </div>`;
   } else {
-    const q=s.q; let media='';
+    const q=s.q; let media=''; var ans = q.ansImg ? `<div class="media ans-media"><img class="foto" src="${q.ansImg}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>` : '';
     if(q.track){
       media=`<div class="spot"><span class="tracknum">▶ Track ${q.track}</span><span class="lbl">Speel fragment ${q.track} van de muziek-playlist</span><a href="${SPOTIFY}" target="_blank" rel="noopener">Open playlist</a></div>`;
     }
@@ -1130,7 +1133,7 @@ function render(){
       <div class="qhead"><span class="rnd">${s.r.emoji} ${s.r.title}</span><span class="num">Vraag ${s.i+1} van ${s.total}</span><span class="qt-time" id="qt-time">1:00</span></div>
       <div class="qtimer"><div class="qtimer-bar" id="qt-bar"></div></div>
       <div class="question">${q.q}</div>
-      ${media}
+      ${media}${ans}
       <div class="opts">${q.o.map((opt,i)=>`<div class="opt"><span class="letter">${letter(i)}</span><span>${opt}</span></div>`).join('')}</div>
       <div class="note">${q.note||''}</div>
     </div>`;

@@ -1,0 +1,29 @@
+ONTHULLINGSBEELDEN — drop hier de afbeeldingen (jpg), exact deze bestandsnamen.
+Ze verschijnen op "Toon antwoord", op dezelfde plek als de clip/het plaatje.
+Vierkant/portret/landschap mag allemaal — ze worden netjes geschaald.
+
+MUZIEK (albumhoezen):
+  muziek1.jpg  - Kendrick Lamar - To Pimp a Butterfly (Track 1)
+  muziek2.jpg  - Chance the Rapper - Coloring Book (Track 2)
+  muziek3.jpg  - Feist (album) (Track 3)
+  muziek4.jpg  - Eve (album) (Track 4)
+  muziek5.jpg  - Rihanna (album) (Track 5)
+  muziek6.jpg  - Jack Garratt (album) (Track 6)
+
+FILM:
+  film1.jpg  - Foto componist John Williams
+  film2.jpg  - Poster Rocky III
+  film3.jpg  - Poster Kill Bill
+  film4.jpg  - Scene A Few Good Men
+  film5.jpg  - Poster Back to the Future
+  film6.jpg  - Scene uit 300
+  film7.jpg  - Jeff Goldblum in Jurassic Park
+  film8.jpg  - Commodus (Gladiator)
+
+SPORT:
+  sport1.jpg - Bergkamp + stadion (WK 1998)
+  sport2.jpg - Andries Noppert op WK
+  sport3.jpg - Bondscoach Bert van Marwijk op WK
+  sport4.jpg - Daley Blind op WK
+
+Ontbreekt een bestand? Dan toont de quiz gewoon niets (geen foutmelding).

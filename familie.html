@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>De Grote Familiequiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fdf6ec; --peach:#ffe9d4; --coral:#e8624a; --gold:#f0b03e;
+    --rose:#d97a9c; --green:#2f8574; --ink:#33272a; --soft:#8a7a72;
+    --display:'Fraunces',Georgia,serif; --body:'Nunito',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    background:var(--cream); color:var(--ink); font-family:var(--body);
+    overflow:hidden; -webkit-font-smoothing:antialiased; touch-action:manipulation;
+  }
+  #bg{position:fixed;inset:0;z-index:-3;
+    background:radial-gradient(120% 80% at 50% 0%, #fffaf3, transparent 60%), var(--cream)}
+  #confetti{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+  /* ---------- slingers ---------- */
+  .garland{position:fixed;top:0;left:0;width:100%;height:80px;z-index:2;pointer-events:none}
+  .garland svg{display:block;width:100%;height:100%}
+
+  /* ---------- stage ---------- */
+  #stage{position:relative;height:100vh;height:100dvh;width:100vw;display:flex;
+    align-items:center;justify-content:center;padding:6vh 5vw 12vh}
+  .slide{width:100%;max-width:1100px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;gap:2.2vh;
+    animation:pop .4s cubic-bezier(.22,.7,.2,1) both}
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+
+  h1.title{font-family:var(--display);font-weight:900;font-size:clamp(2.6rem,9vh,5.6rem);
+    line-height:.98;margin:0;letter-spacing:-.02em}
+  .kicker{font-family:var(--body);font-weight:800;text-transform:uppercase;letter-spacing:.14em;
+    font-size:clamp(.7rem,1.7vh,.95rem);color:#fff;background:var(--coral);
+    padding:.5em 1.1em;border-radius:999px;box-shadow:0 6px 0 rgba(232,98,74,.28)}
+  .sub{font-size:clamp(1rem,2.3vh,1.35rem);color:var(--soft);font-weight:600;max-width:44ch;margin:0}
+  .big-num{font-family:var(--display);font-weight:900;font-size:clamp(4rem,17vh,10rem);
+    line-height:.85;color:var(--coral)}
+
+  /* ---------- ronde-intro ---------- */
+  .round-card{background:#fff;border-radius:28px;padding:4vh 5vw;
+    box-shadow:0 18px 44px rgba(51,39,42,.10); max-width:900px}
+  .round-no{font-family:var(--display);font-weight:900;font-size:clamp(1rem,2.4vh,1.4rem);
+    color:var(--gold);letter-spacing:.08em;text-transform:uppercase}
+  .round-name{font-family:var(--display);font-weight:900;font-size:clamp(2rem,7vh,4rem);
+    line-height:1;margin:.15em 0 .3em}
+  .round-how{font-size:clamp(.95rem,2.1vh,1.2rem);color:var(--soft);font-weight:600;max-width:40ch;margin:0 auto}
+
+  /* ---------- vraag ---------- */
+  .qhead{display:flex;gap:.6em;align-items:center;justify-content:center;flex-wrap:wrap}
+  .pill{font-weight:800;font-size:clamp(.68rem,1.6vh,.85rem);text-transform:uppercase;
+    letter-spacing:.1em;padding:.42em 1em;border-radius:999px}
+  .pill.round{background:var(--peach);color:var(--coral)}
+  .pill.kids{background:#e6f4f0;color:var(--green)}
+  .pill.finale{background:var(--gold);color:#fff}
+  .emo{font-size:clamp(3rem,12vh,7rem);line-height:1.15;letter-spacing:.08em;
+    background:#fff;border-radius:28px;padding:.35em .6em;
+    box-shadow:0 18px 44px rgba(51,39,42,.10)}
+  .question{font-family:var(--display);font-weight:900;
+    font-size:clamp(1.5rem,5.4vh,3.1rem);line-height:1.1;margin:0;max-width:22ch}
+  .note{font-size:clamp(.85rem,1.9vh,1.05rem);color:var(--soft);font-weight:600}
+
+  /* deze-of-die */
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:1.4em;width:100%;max-width:760px;margin-top:1vh}
+  .duo div{background:#fff;border-radius:22px;padding:3.4vh 1em;font-family:var(--display);
+    font-weight:900;font-size:clamp(1.2rem,3.6vh,2.1rem);box-shadow:0 12px 26px rgba(51,39,42,.09)}
+  .duo div:first-child{border-bottom:7px solid var(--coral)}
+  .duo div:last-child{border-bottom:7px solid var(--green)}
+
+  /* antwoord */
+  .answer{display:none;font-family:var(--display);font-weight:900;
+    font-size:clamp(1.4rem,4.6vh,2.6rem);color:#fff;background:var(--green);
+    padding:.5em 1.1em;border-radius:20px;box-shadow:0 12px 26px rgba(47,133,116,.24)}
+  .slide.reveal .answer{display:block;animation:pop .34s cubic-bezier(.22,.7,.2,1) both}
+
+  /* ---------- scorebord ---------- */
+  #scores{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:.5em;
+    justify-content:center;flex-wrap:wrap;padding:.5em .7em .7em;
+    background:linear-gradient(0deg,rgba(253,246,236,.98),rgba(253,246,236,0))}
+  .team{display:flex;align-items:center;gap:.45em;background:#fff;border-radius:999px;
+    padding:.3em .35em .3em .95em;box-shadow:0 6px 16px rgba(51,39,42,.10);font-weight:800}
+  .team .nm{font-size:clamp(.75rem,1.7vh,.95rem);max-width:9em;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .team .sc{font-family:var(--display);font-weight:900;font-size:clamp(1rem,2.2vh,1.3rem);min-width:1.4em}
+  .team button{border:none;cursor:pointer;font-family:var(--body);font-weight:800;
+    width:1.9em;height:1.9em;border-radius:50%;font-size:clamp(.8rem,1.8vh,1rem);
+    background:var(--peach);color:var(--coral)}
+  .team button.minus{background:#f3ece6;color:var(--soft)}
+  .team button:hover{filter:brightness(.96)}
+  .team.t0{border-bottom:4px solid var(--coral)}
+  .team.t1{border-bottom:4px solid var(--green)}
+  .team.t2{border-bottom:4px solid var(--gold)}
+  .team.t3{border-bottom:4px solid var(--rose)}
+
+  /* ---------- controls ---------- */
+  .controls{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;gap:.5em;
+    align-items:center;justify-content:center;padding:.6em;pointer-events:none}
+  .controls>*{pointer-events:auto}
+  .controls button{font-family:var(--body);font-weight:800;border:none;cursor:pointer;
+    background:#fff;color:var(--ink);border-radius:999px;padding:.6em 1.1em;
+    font-size:clamp(.78rem,1.8vh,.95rem);box-shadow:0 6px 16px rgba(51,39,42,.10)}
+  .controls button:hover{background:var(--peach)}
+  .controls .primary{background:var(--coral);color:#fff;box-shadow:0 6px 16px rgba(232,98,74,.3)}
+  #topbar{position:fixed;top:0;right:0;z-index:6;display:flex;gap:.4em;padding:.7em .9em}
+  #topbar button{font-family:var(--body);font-weight:800;border:none;cursor:pointer;
+    background:#fff;border-radius:999px;width:2.4em;height:2.4em;font-size:1rem;
+    box-shadow:0 4px 12px rgba(51,39,42,.10)}
+  .progress{font-weight:700;color:var(--soft);font-size:clamp(.7rem,1.6vh,.85rem);padding:0 .6em}
+
+  /* ---------- teamindeler ---------- */
+  #ti{width:100%;max-width:900px;display:flex;flex-direction:column;gap:1.6vh;align-items:center}
+  .names{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6em;width:100%}
+  .np{display:flex;align-items:center;gap:.4em;background:#fff;border-radius:14px;
+    padding:.45em .6em;box-shadow:0 4px 12px rgba(51,39,42,.07)}
+  .np input{border:none;outline:none;font-family:var(--body);font-weight:700;
+    font-size:.95rem;width:100%;background:transparent;color:var(--ink)}
+  .np .tag{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    padding:.28em .55em;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .np .tag.a{background:var(--peach);color:var(--coral)}
+  .np .tag.k{background:#e6f4f0;color:var(--green)}
+  .teamgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1em;width:100%}
+  .tcard{background:#fff;border-radius:22px;padding:1.2em;box-shadow:0 12px 26px rgba(51,39,42,.09);text-align:left}
+  .tcard h3{font-family:var(--display);font-weight:900;margin:0 0 .4em;font-size:1.25rem}
+  .tcard ul{margin:0;padding-left:1.1em;font-weight:700;color:var(--ink);line-height:1.6}
+  .tcard li.kid::after{content:' ✿';color:var(--green)}
+
+  /* ---------- rad ---------- */
+  .wheelwrap{position:relative;width:min(42vh,72vw,360px);aspect-ratio:1;margin:0 auto}
+  #wheel{width:100%;height:100%;display:block;filter:drop-shadow(0 14px 30px rgba(51,39,42,.18));
+    transition:transform 3.4s cubic-bezier(.15,.72,.16,1)}
+  .pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;
+    border-left:15px solid transparent;border-right:15px solid transparent;border-top:24px solid var(--ink);
+    filter:drop-shadow(0 3px 4px rgba(51,39,42,.25));z-index:2}
+  .wheelrow{display:flex;gap:3vw;align-items:center;justify-content:center;width:100%;flex-wrap:wrap}
+  .wheelcards{display:flex;flex-direction:column;gap:.7em;min-width:230px;max-width:300px;flex:1}
+  .wcard{background:#fff;border-radius:18px;padding:.8em 1em;box-shadow:0 10px 24px rgba(51,39,42,.08);
+    text-align:left;opacity:.42;transform:scale(.98);transition:.3s}
+  .wcard.on{opacity:1;transform:none}
+  .wcard h4{font-family:var(--display);font-weight:900;margin:0 0 .25em;font-size:1.05rem}
+  .wcard ul{margin:0;padding-left:1.1em;font-weight:700;line-height:1.5;font-size:.92rem;min-height:1.4em}
+  .wcard li{opacity:0;animation:nameIn .3s forwards}
+  @keyframes nameIn{to{opacity:1}}
+  .wcard li.kid::after{content:' ✿';color:var(--green)}
+  .namegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1em;width:100%;max-width:820px}
+  .namecard{background:#fff;border-radius:20px;padding:1em 1.1em;box-shadow:0 12px 26px rgba(51,39,42,.09);text-align:left}
+  .namecard .bar{font-family:var(--display);font-weight:900;font-size:1.05rem;margin-bottom:.35em}
+  .namecard input{width:100%;border:none;outline:none;background:var(--cream);border-radius:12px;
+    padding:.55em .7em;font-family:var(--display);font-weight:900;font-size:1.1rem;color:var(--ink)}
+  .namecard .mem{font-size:.82rem;font-weight:700;color:var(--soft);margin-top:.45em}
+
+  .hint{position:fixed;top:0;left:0;z-index:6;padding:.9em 1.1em;color:var(--soft);
+    font-size:.72rem;font-weight:700;letter-spacing:.04em}
+
+  /* ---------- soundboard ---------- */
+  .soundboard{position:fixed;right:.9em;top:3.6em;z-index:7;background:#fff;border-radius:20px;
+    box-shadow:0 18px 44px rgba(51,39,42,.18);padding:.9em;width:min(320px,calc(100vw - 2em));
+    display:none}
+  .soundboard.open{display:block;animation:pop .25s cubic-bezier(.22,.7,.2,1) both}
+  .sb-head{display:flex;align-items:center;justify-content:space-between;font-weight:800;
+    font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--soft);margin:0 .2em .6em}
+  .sb-x{border:none;background:var(--peach);color:var(--coral);border-radius:50%;width:1.8em;height:1.8em;
+    font-weight:800;cursor:pointer;line-height:1}
+  .sb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45em}
+  .sb-grid button{font-family:var(--body);font-weight:800;font-size:.66rem;color:var(--ink);
+    background:var(--cream);border:none;border-radius:14px;padding:.6em .3em;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:.25em;line-height:1.1}
+  .sb-grid button:hover{background:var(--peach)}
+  .sb-grid button .em{font-size:1.4rem}
+  .sb-stop{grid-column:1/-1;flex-direction:row!important;background:var(--coral)!important;color:#fff!important}
+
+  @media (max-width:640px){
+    #stage{padding:7vh 5vw 16vh}
+    .duo{grid-template-columns:1fr}
+    .hint{display:none}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+      transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="confetti"></canvas>
+<div class="garland" id="garland" aria-hidden="true"></div>
+<div class="hint">← → bladeren · A = antwoord · S = scores · F = fullscreen</div>
+<div id="topbar">
+  <button onclick="toggleTune()" id="tuneBtn" title="Intromuziekje aan/uit" style="width:auto;padding:0 .9em">♪ Tune</button>
+  <button onclick="toggleSoundboard()" id="sbBtn" title="Soundboard met geluidseffecten" style="width:auto;padding:0 .9em">🎛️ FX</button>
+  <button onclick="toggleConfetti()" id="cfBtn" title="Confetti aan/uit">✦</button>
+  <button onclick="goFs()" title="Volledig scherm">⛶</button>
+</div>
+<div id="soundboard" class="soundboard" aria-hidden="true"></div>
+<div id="tuneplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
+<div id="sbplayer" style="position:fixed;left:-9999px;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none"></div>
+
+<div id="stage"></div>
+<div id="scores"></div>
+<div class="controls" id="controls"></div>
+
+<script>
+/* =========================================================
+   DE GROTE FAMILIEQUIZ — skelet (stap 1)
+   Vragen volgen in stap 2.
+   ========================================================= */
+
+/* ---------- deelnemers ---------- */
+var PEOPLE = [
+  {n:'Oma Lien', kid:false},
+  {n:'Bertil',   kid:false},
+  {n:'Anneriet', kid:false},
+  {n:'Tije',     kid:false},
+  {n:'Lisa',     kid:false},
+  {n:'Lotte',    kid:false},
+  {n:'Yara',     kid:true},
+  {n:'Juna',     kid:true},
+  {n:'Mees',     kid:true},
+  {n:'Fie',      kid:true},
+  {n:'Noya',     kid:true},
+  {n:'Abe',      kid:true}
+];
+var NTEAMS = 3;
+var TEAMNAMES = ['Team Rood','Team Groen','Team Goud','Team Roze'];
+var teams = [];          // [{name, members:[], score}]
+
+/* ---------- rondes ---------- */
+var ROUNDS = [
+  {no:1, name:'Deze of die',      how:'Je ziet twee antwoorden: één links en één rechts. Denk je links? Ga aan de linkerkant van de kamer staan. Denk je rechts? Ga rechts staan. Sta je goed, dan verdien je een punt voor je team.'},
+  {no:2, name:'Wie weet het eerst', how:'Roep het antwoord. Kinderen mogen als eerste — volwassenen wachten 3 seconden.'},
+  {no:3, name:'Kijken & raden',   how:'Op het scherm verschijnt een raadsel in emoji. Welke film, welk liedje of welk ding zie je? Wie het als eerste roept, scoort.'},
+  {no:4, name:'Schatvragen',      how:'Niemand weet dit precies. Elk team noemt een getal — het dichtst erbij wint.'}
+];
+
+/* ---------- vragen ---------- */
+var QUESTIONS = [
+  /* Ronde 1 — Deze of die (kant van de kamer kiezen) */
+  {r:1, type:'duo', q:'Wat was er eerder?', a:'De telefoon', b:'De gloeilamp', ans:'De telefoon — 1876, de gloeilamp kwam in 1879'},
+  {r:1, type:'duo', q:'Waar wonen pinguïns?', a:'Noordpool', b:'Zuidpool', ans:'De Zuidpool'},
+  {r:1, type:'duo', q:'Hoe slaapt een dolfijn?', a:'Met één oog open', b:'Allebei de ogen dicht', ans:'Met één oog open — de helft van zijn brein blijft wakker'},
+  {r:1, type:'duo', q:'Kan een kangoeroe achteruit hoppen?', a:'Ja', b:'Nee', ans:'Nee — zijn staart en poten zitten in de weg'},
+  {r:1, type:'duo', q:'Hoeveel poten heeft een spin?', a:'Zes', b:'Acht', ans:'Acht'},
+  {r:1, type:'duo', q:'Waarvan zijn er meer?', a:'Bomen op aarde', b:'Sterren in de Melkweg', ans:'Bomen — zo’n 3.000 miljard, tien keer meer dan sterren in de Melkweg'},
+  {r:1, type:'duo', q:'Is een tomaat…', a:'Groente', b:'Fruit', ans:'Fruit — botanisch is het een vrucht'},
+  {r:1, type:'duo', q:'Is een pinda…', a:'Een noot', b:'Een peulvrucht', ans:'Een peulvrucht — familie van de erwt en de boon'},
+
+  /* Ronde 2 — Wie weet het eerst (roepen, kinderen eerst) */
+  {r:2, type:'buzz', q:'Hoeveel poten hebben drie koeien samen?', ans:'Twaalf', kids:true},
+  {r:2, type:'buzz', q:'Wat is de hoofdstad van Nederland?', ans:'Amsterdam', kids:true},
+  {r:2, type:'buzz', q:'Wat is het grootste dier dat ooit heeft geleefd?', ans:'De blauwe vinvis', kids:true},
+  {r:2, type:'buzz', q:'Uit welk land komt pizza?', ans:'Italië', kids:true},
+  {r:2, type:'buzz', q:'Hoeveel dagen heeft februari in een schrikkeljaar?', ans:'29', kids:true},
+  {r:2, type:'buzz', q:'Wat eet een panda het allerliefst?', ans:'Bamboe', kids:true},
+  {r:2, type:'buzz', q:'Hoeveel armen heeft een octopus?', ans:'Acht', kids:true},
+  {r:2, type:'buzz', q:'Welk geluid maakt een koe?', ans:'Boe!', kids:true},
+  {r:2, type:'buzz', q:'Hoeveel weken zitten er in een jaar?', ans:'52', kids:true},
+
+  /* Ronde 3 — Kijken & raden (emoji-raadsels) */
+  {r:3, type:'beeld', q:'Welke film is dit?', emo:'🧙‍♂️⚡👓', ans:'Harry Potter'},
+  {r:3, type:'beeld', q:'Welke film is dit?', emo:'🦁👑', ans:'De Leeuwenkoning'},
+  {r:3, type:'beeld', q:'Welke film is dit?', emo:'❄️⛄👭', ans:'Frozen'},
+  {r:3, type:'beeld', q:'Welk uitje is dit?', emo:'🎢🏰🧚', ans:'De Efteling'},
+  {r:3, type:'beeld', q:'Welk restaurant is dit?', emo:'🍟🍔🤡', ans:'McDonald’s'},
+  {r:3, type:'beeld', q:'Wat is dit?', emo:'🐷💰', ans:'Een spaarvarken'},
+  {r:3, type:'beeld', q:'Welk liedje is dit?', emo:'👨🔔😴🎵', ans:'Vader Jacob'},
+  {r:3, type:'beeld', q:'Welke film is dit?', emo:'🎤👹⚔️', ans:'K-pop Demon Hunters'},
+  {r:3, type:'beeld', q:'Welke film is dit?', emo:'👴🎈🏠', ans:'Up'},
+
+  /* Ronde 4 — Schatvragen (dichtstbij wint) */
+  {r:4, type:'schat', q:'Hoeveel botten heeft een volwassen mens?', ans:'206'},
+  {r:4, type:'schat', q:'Hoeveel kilo weegt een pasgeboren olifantje?', ans:'Ongeveer 100 kilo'},
+  {r:4, type:'schat', q:'Hoeveel kilometer lang is de Nijl?', ans:'Ongeveer 6.650 km'},
+  {r:4, type:'schat', q:'Hoeveel meter hoog is de hoogste boom ter wereld?', ans:'Ongeveer 116 meter'},
+  {r:4, type:'schat', q:'Hoeveel minuten duurde de kortste oorlog ooit?', ans:'Ongeveer 40 minuten (1896)'},
+  {r:4, type:'schat', q:'Hoeveel dagen oud ben je op je 70e verjaardag?', ans:'Ruim 25.500 dagen', finale:true}
+];
+
+/* =========================================================
+   SLIDES
+   ========================================================= */
+var slides = [], idx = 0;
+
+function buildSlides(){
+  slides = [];
+  slides.push({t:'title'});
+  slides.push({t:'rules'});
+  slides.push({t:'teams'});
+  ROUNDS.forEach(function(r){
+    slides.push({t:'round', r:r});
+    QUESTIONS.filter(function(q){return q.r===r.no;}).forEach(function(q){
+      slides.push({t:'q', q:q, r:r});
+    });
+    slides.push({t:'stand', r:r});
+  });
+  slides.push({t:'end'});
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+function render(){
+  if(idx<0) idx=0;
+  if(idx>slides.length-1) idx=slides.length-1;
+  var s = slides[idx], st = document.getElementById('stage'), h = '';
+  if(!s) return;
+  var ctr = '';
+
+  if(s.t==='title'){
+    h = '<div class="slide">'
+      + '<span class="kicker">Familieweekend 2026</span>'
+      + '<h1 class="title">De Grote<br>Familiequiz</h1>'
+      + '<p class="sub">Vier rondes. Van 3 tot 70 jaar. Iedereen doet mee.</p>'
+      + '</div>';
+  }
+  else if(s.t==='rules'){
+    h = '<div class="slide"><div class="round-card">'
+      + '<div class="round-no">Hoe het werkt</div>'
+      + '<h2 class="round-name">Spelregels</h2>'
+      + '<div style="text-align:left;max-width:34em;margin:0 auto;font-weight:600;line-height:1.85;font-size:clamp(.95rem,2.1vh,1.15rem)">'
+      + '<p style="margin:.3em 0">🎤 &nbsp;Geen papier — je <b>roept</b> het antwoord.</p>'
+      + '<p style="margin:.3em 0">🧒 &nbsp;<b>Kinderen eerst:</b> volwassenen wachten 3 seconden.</p>'
+      + '<p style="margin:.3em 0">⭐ &nbsp;Goed antwoord = <b>1 punt</b> voor je team.</p>'
+      + '<p style="margin:.3em 0">🤝 &nbsp;Overleggen mag — hardop meedenken hoort erbij.</p>'
+      + '<p style="margin:.3em 0">🏆 &nbsp;Het winnende team wint <b>een prijs én de wisseltrofee</b>.</p>'
+      + '</div></div></div>';
+  }
+  else if(s.t==='teams'){
+    h = '<div class="slide">' + tiHTML() + '</div>';
+  }
+  else if(s.t==='round'){
+    h = '<div class="slide"><div class="round-card">'
+      + '<div class="round-no">Ronde ' + s.r.no + ' van ' + ROUNDS.length + '</div>'
+      + '<h2 class="round-name">' + esc(s.r.name) + '</h2>'
+      + '<p class="round-how">' + esc(s.r.how) + '</p>'
+      + '</div></div>';
+  }
+  else if(s.t==='q'){
+    var q = s.q, mid = '';
+    if(q.type==='duo'){
+      mid = '<div class="duo"><div>' + esc(q.a) + '</div><div>' + esc(q.b) + '</div></div>';
+    } else if(q.type==='schat'){
+      mid = '<p class="note">Elk team noemt één getal. Dichtstbij wint' + (q.finale ? ' — dubbele punten!' : '') + '.</p>';
+    } else if(q.type==='beeld'){
+      mid = '<div class="emo">' + q.emo + '</div>';
+    }
+    h = '<div class="slide" id="qslide">'
+      + '<div class="qhead"><span class="pill round">Ronde ' + s.r.no + ' · ' + esc(s.r.name) + '</span>'
+      + (q.kids ? '<span class="pill kids">Kinderen eerst</span>' : '')
+      + (q.finale ? '<span class="pill finale">Finale · 2 punten</span>' : '') + '</div>'
+      + '<h2 class="question">' + esc(q.q) + '</h2>'
+      + mid
+      + '<div class="answer">' + esc(q.ans) + '</div>'
+      + '</div>';
+    ctr = '<button class="primary" onclick="toggleAnswer()" id="revealBtn">Toon antwoord</button>';
+  }
+  else if(s.t==='stand'){
+    h = '<div class="slide">'
+      + '<span class="kicker">Tussenstand</span>'
+      + '<h2 class="title" style="font-size:clamp(2rem,7vh,4rem)">Na ronde ' + s.r.no + '</h2>'
+      + standHTML()
+      + '</div>';
+  }
+  else if(s.t==='end'){
+    var win = winner(), tied = tiedWinners();
+    if(tied.length > 1){
+      h = '<div class="slide">'
+        + '<span class="kicker">Gelijkspel!</span>'
+        + '<h1 class="title" style="font-size:clamp(2rem,7vh,4.4rem)">' + tied.map(function(t){return esc(t.name);}).join(' & ') + '</h1>'
+        + '<p class="sub">Beslis met één laatste schatvraag: dichtstbij wint alles.</p>'
+        + standHTML()
+        + '</div>';
+    } else {
+      h = '<div class="slide">'
+        + '<span class="kicker">En de winnaar is</span>'
+        + '<h1 class="title">' + esc(win ? win.name : 'Nog geen winnaar') + '</h1>'
+        + '<div class="big-num">' + (win ? win.score : 0) + '</div>'
+        + (win ? '<p class="sub" style="font-size:clamp(1.1rem,2.6vh,1.5rem);color:var(--ink)">🏆 Jullie winnen de prijs én de wisseltrofee!</p>' : '')
+        + standHTML()
+        + '</div>';
+    }
+  }
+
+  st.innerHTML = h;
+  document.getElementById('controls').innerHTML =
+      '<button onclick="prev()">← Vorige</button>'
+    + ctr
+    + '<span class="progress">' + (idx+1) + ' / ' + slides.length + '</span>'
+    + '<button onclick="next()">Volgende →</button>';
+  drawScores();
+  if(s.t==='end' && win) burst();
+}
+
+function toggleAnswer(){
+  var el = document.getElementById('qslide'); if(!el) return;
+  var on = el.classList.toggle('reveal');
+  var b = document.getElementById('revealBtn');
+  if(b) b.textContent = on ? 'Verberg antwoord' : 'Toon antwoord';
+}
+function next(){ if(idx < slides.length-1){ idx++; render(); } }
+function prev(){ if(idx > 0){ idx--; render(); } }
+
+/* =========================================================
+   TEAMS
+   ========================================================= */
+var tiPhase='select', revealedT=[], wrot=0, spinning=false;
+
+function tiHTML(){
+  if(tiPhase==='wheel') return wheelHTML();
+  if(tiPhase==='names') return namesHTML();
+  var h = '<div id="ti">'
+    + '<span class="kicker">Stap 1</span>'
+    + '<h2 class="title" style="font-size:clamp(1.8rem,6vh,3.4rem)">Wie speelt er mee?</h2>'
+    + '<p class="sub">Vul de namen in en tik op het label om volwassene of kind te wisselen.</p>'
+    + '<div class="names">';
+  PEOPLE.forEach(function(p,i){
+    h += '<div class="np">'
+      +  '<input value="' + esc(p.n) + '" oninput="PEOPLE[' + i + '].n=this.value">'
+      +  '<span class="tag ' + (p.kid?'k':'a') + '" onclick="flipKid(' + i + ')">' + (p.kid?'kind':'volw') + '</span>'
+      +  '</div>';
+  });
+  h += '</div>'
+    + '<div style="display:flex;gap:.6em;align-items:center;flex-wrap:wrap;justify-content:center">'
+    + '<button onclick="addPerson()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:#fff;border-radius:999px;padding:.6em 1.1em;box-shadow:0 6px 16px rgba(51,39,42,.1)">+ Naam</button>'
+    + '<span class="note">Teams:</span>';
+  [2,3,4].forEach(function(n){
+    h += '<button onclick="setTeams(' + n + ')" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:' + (NTEAMS===n?'var(--coral);color:#fff':'#fff') + ';border-radius:999px;padding:.6em 1em;box-shadow:0 6px 16px rgba(51,39,42,.1)">' + n + '</button>';
+  });
+  h += '<button class="primary" onclick="goWheel()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:var(--coral);color:#fff;border-radius:999px;padding:.6em 1.2em;box-shadow:0 6px 16px rgba(232,98,74,.3)">🎡 Naar het rad →</button>'
+    + '</div></div>';
+  return h;
+}
+
+/* ---------- rad-fase ---------- */
+var WCOLS=['#e8624a','#2f8574','#f0b03e','#d97a9c'];
+function wheelSVG(){
+  var n=NTEAMS, R=146, cx=150, cy=150, seg=360/n, svg='';
+  for(var i=0;i<n;i++){
+    var a0=(i*seg-90)*Math.PI/180, a1=((i+1)*seg-90)*Math.PI/180;
+    var x0=cx+R*Math.cos(a0), y0=cy+R*Math.sin(a0), x1=cx+R*Math.cos(a1), y1=cy+R*Math.sin(a1);
+    var large=seg>180?1:0;
+    svg+='<path d="M'+cx+' '+cy+' L'+x0.toFixed(1)+' '+y0.toFixed(1)+' A'+R+' '+R+' 0 '+large+' 1 '+x1.toFixed(1)+' '+y1.toFixed(1)+' Z" fill="'+WCOLS[i%4]+'" stroke="#fff" stroke-width="4"/>';
+    var am=((i+0.5)*seg-90)*Math.PI/180, lr=R*0.62, lx=cx+lr*Math.cos(am), ly=cy+lr*Math.sin(am);
+    svg+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" fill="#fff" font-family="Fraunces,Georgia,serif" font-weight="900" font-size="30" text-anchor="middle" dominant-baseline="central" transform="rotate('+((i+0.5)*seg)+' '+lx.toFixed(1)+' '+ly.toFixed(1)+')">'+(i+1)+'</text>';
+  }
+  svg+='<circle cx="150" cy="150" r="147" fill="none" stroke="#fff" stroke-width="6"/>';
+  svg+='<circle cx="150" cy="150" r="16" fill="#fff"/><circle cx="150" cy="150" r="7" fill="#33272a"/>';
+  return svg;
+}
+function wheelHTML(){
+  var done = revealedT.length===teams.length;
+  var h='<div id="ti">'
+    + '<span class="kicker">Het rad beslist</span>'
+    + '<h2 class="title" style="font-size:clamp(1.6rem,5.4vh,3rem)">Wie zit bij wie?</h2>'
+    + '<div class="wheelrow">'
+    + '<div class="wheelwrap"><div class="pointer"></div>'
+    + '<svg id="wheel" viewBox="0 0 300 300" style="transform:rotate('+wrot+'deg)">'+wheelSVG()+'</svg></div>'
+    + '<div class="wheelcards">';
+  teams.forEach(function(t,i){
+    var on = revealedT.indexOf(i)>=0;
+    h += '<div class="wcard'+(on?' on':'')+'" id="wc'+i+'"><h4 style="color:'+teamColor(i)+'">'+esc(t.name)+'</h4><ul>';
+    if(on) t.members.forEach(function(m){ h+='<li class="'+(m.kid?'kid':'')+'" style="opacity:1">'+esc(m.n)+'</li>'; });
+    h += '</ul></div>';
+  });
+  h += '</div></div>'
+    + '<div style="display:flex;gap:.6em;flex-wrap:wrap;justify-content:center">'
+    + '<button onclick="tiBack()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:#fff;border-radius:999px;padding:.6em 1.1em;box-shadow:0 6px 16px rgba(51,39,42,.1)">← Spelers</button>'
+    + '<button onclick="reshuffle()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:#fff;border-radius:999px;padding:.6em 1.1em;box-shadow:0 6px 16px rgba(51,39,42,.1)">↺ Opnieuw</button>'
+    + (done
+      ? '<button class="primary" onclick="toNames()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:var(--coral);color:#fff;border-radius:999px;padding:.6em 1.2em;box-shadow:0 6px 16px rgba(232,98,74,.3)">Teamnamen →</button>'
+      : '<button class="primary" id="spinBtn" onclick="spinWheel()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:var(--coral);color:#fff;border-radius:999px;padding:.6em 1.2em;box-shadow:0 6px 16px rgba(232,98,74,.3)">🎡 Draai het rad!</button>')
+    + '</div>'
+    + '<p class="note" id="wprog">'+revealedT.length+' / '+teams.length+' teams onthuld</p>'
+    + '</div>';
+  return h;
+}
+function goWheel(){ makeTeams(); revealedT=[]; wrot=0; spinning=false; tiPhase='wheel'; render(); }
+function tiBack(){ tiPhase='select'; spinning=false; render(); }
+function reshuffle(){ makeTeams(); revealedT=[]; wrot=0; spinning=false; render(); }
+function spinWheel(){
+  if(spinning) return;
+  var remaining=[];
+  for(var i=0;i<teams.length;i++) if(revealedT.indexOf(i)<0) remaining.push(i);
+  if(!remaining.length) return;
+  spinning=true;
+  var b=document.getElementById('spinBtn'); if(b) b.disabled=true;
+  var k=remaining[(Math.random()*remaining.length)|0], seg=360/teams.length;
+  var base=wrot-(wrot%360);
+  var desired=((360-(k+0.5)*seg)%360+360)%360;
+  var jitter=(Math.random()-.5)*seg*.5;
+  wrot=base+360*4+desired+jitter;
+  var w=document.getElementById('wheel'); if(w) w.style.transform='rotate('+wrot+'deg)';
+  tickSound(3400);
+  setTimeout(function(){
+    revealedT.push(k);
+    var card=document.getElementById('wc'+k);
+    if(card){ card.classList.add('on');
+      var ul=card.querySelector('ul'); ul.innerHTML='';
+      teams[k].members.forEach(function(m,ni){
+        setTimeout(function(){
+          var li=document.createElement('li');
+          li.className=m.kid?'kid':''; li.style.animationDelay='0s'; li.textContent=m.n;
+          ul.appendChild(li);
+        }, 300+ni*380);
+      });
+    }
+    var done=revealedT.length===teams.length;
+    var wp=document.getElementById('wprog');
+    if(wp) wp.textContent=done ? '🎉 Alle teams ingedeeld!' : revealedT.length+' / '+teams.length+' teams onthuld';
+    setTimeout(function(){
+      burst(); spinning=false;
+      if(done){ render(); }
+      else if(b){ b.disabled=false; b.textContent='🎡 Volgende team!'; }
+    }, 300+teams[k].members.length*380+250);
+  }, 3450);
+}
+function tickSound(dur){
+  var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+  try{
+    var ctx=new AC(), t=0;
+    function clk(){ var o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='triangle'; o.frequency.setValueAtTime(1500,ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(680,ctx.currentTime+.035);
+      o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(.14,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.055);
+      o.start(); o.stop(ctx.currentTime+.06); }
+    (function go(){
+      if(t>dur){ var o=ctx.createOscillator(), g=ctx.createGain();
+        o.type='sine'; o.frequency.value=880; o.connect(g); g.connect(ctx.destination);
+        g.gain.setValueAtTime(.0001,ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(.2,ctx.currentTime+.02);
+        g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.55);
+        o.start(); o.stop(ctx.currentTime+.6);
+        setTimeout(function(){ try{ctx.close();}catch(e){} },800); return; }
+      clk(); var gap=42+Math.pow(t/dur,2.4)*300; t+=gap; setTimeout(go,gap);
+    })();
+  }catch(e){}
+}
+
+/* ---------- teamnamen-fase ---------- */
+function namesHTML(){
+  var h='<div id="ti">'
+    + '<span class="kicker">Laatste stap</span>'
+    + '<h2 class="title" style="font-size:clamp(1.6rem,5.4vh,3rem)">Verzin een teamnaam</h2>'
+    + '<p class="sub">Ga bij je team zitten en bedenk samen een naam. Hoe gekker, hoe beter.</p>'
+    + '<div class="namegrid">';
+  teams.forEach(function(t,i){
+    h += '<div class="namecard"><div class="bar" style="color:'+teamColor(i)+'">'+esc(TEAMNAMES[i])+'</div>'
+      +  '<input id="tn'+i+'" placeholder="Teamnaam…" maxlength="28" value="'+esc(t.name===TEAMNAMES[i]?'':t.name)+'">'
+      +  '<div class="mem">'+t.members.map(function(m){return esc(m.n);}).join(' · ')+'</div></div>';
+  });
+  h += '</div>'
+    + '<div style="display:flex;gap:.6em;flex-wrap:wrap;justify-content:center">'
+    + '<button onclick="tiPhase=\'wheel\';render()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:#fff;border-radius:999px;padding:.6em 1.1em;box-shadow:0 6px 16px rgba(51,39,42,.1)">← Terug</button>'
+    + '<button class="primary" onclick="saveNames()" style="font-family:var(--body);font-weight:800;border:none;cursor:pointer;background:var(--coral);color:#fff;border-radius:999px;padding:.6em 1.2em;box-shadow:0 6px 16px rgba(232,98,74,.3)">De quiz kan beginnen! →</button>'
+    + '</div></div>';
+  return h;
+}
+function toNames(){ tiPhase='names'; render(); }
+function saveNames(){
+  teams.forEach(function(t,i){
+    var inp=document.getElementById('tn'+i);
+    var v=inp && inp.value.trim() ? inp.value.trim() : TEAMNAMES[i];
+    t.name=v;
+  });
+  next();
+}
+function teamColor(i){ return ['var(--coral)','var(--green)','var(--gold)','var(--rose)'][i%4]; }
+function flipKid(i){ PEOPLE[i].kid = !PEOPLE[i].kid; render(); }
+function addPerson(){ PEOPLE.push({n:'Naam', kid:false}); render(); }
+function setTeams(n){ NTEAMS = n; render(); }
+
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=(Math.random()*(i+1))|0; var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+/* verdeelt kinderen en volwassenen zo gelijk mogelijk over de teams */
+function makeTeams(){
+  var kids = shuffle(PEOPLE.filter(function(p){return p.kid;}).slice());
+  var adults = shuffle(PEOPLE.filter(function(p){return !p.kid;}).slice());
+  teams = [];
+  for(var i=0;i<NTEAMS;i++) teams.push({name:TEAMNAMES[i], members:[], score:0});
+  var t=0;
+  kids.forEach(function(k){ teams[t%NTEAMS].members.push(k); t++; });
+  adults.forEach(function(a){ teams[t%NTEAMS].members.push(a); t++; });
+  if(slides.length) render();
+}
+
+function standHTML(){
+  if(!teams.length) return '<p class="sub">Verdeel eerst de teams.</p>';
+  var sorted = teams.slice().sort(function(a,b){return b.score-a.score;});
+  var h = '<div class="teamgrid" style="max-width:820px">';
+  sorted.forEach(function(t){
+    var i = teams.indexOf(t);
+    h += '<div class="tcard" style="text-align:center">'
+      +  '<h3 style="color:' + teamColor(i) + '">' + esc(t.name) + '</h3>'
+      +  '<div class="big-num" style="font-size:clamp(2.4rem,9vh,5rem);color:' + teamColor(i) + '">' + t.score + '</div>'
+      +  '</div>';
+  });
+  return h + '</div>';
+}
+function winner(){
+  if(!teams.length) return null;
+  return teams.slice().sort(function(a,b){return b.score-a.score;})[0];
+}
+function tiedWinners(){
+  if(!teams.length) return [];
+  var mx = Math.max.apply(null, teams.map(function(t){return t.score;}));
+  if(mx===0) return [];
+  return teams.filter(function(t){return t.score===mx;});
+}
+
+/* ---------- scorebalk ---------- */
+function drawScores(){
+  var el = document.getElementById('scores');
+  if(!teams.length || slides[idx].t==='teams' || slides[idx].t==='title'){ el.innerHTML=''; return; }
+  var h = '';
+  teams.forEach(function(t,i){
+    h += '<div class="team t' + i + '">'
+      +  '<span class="nm">' + esc(t.name) + '</span>'
+      +  '<span class="sc">' + t.score + '</span>'
+      +  '<button class="minus" onclick="pt(' + i + ',-1)" title="Punt eraf">−</button>'
+      +  '<button onclick="pt(' + i + ',1)" title="Punt erbij">+</button>'
+      +  '</div>';
+  });
+  el.innerHTML = h;
+}
+function pt(i,d){
+  teams[i].score = Math.max(0, teams[i].score + d);
+  drawScores();
+  if(slides[idx].t==='stand' || slides[idx].t==='end') render();
+  if(d>0) burst();
+}
+
+/* =========================================================
+   CONFETTI
+   ========================================================= */
+var cf = document.getElementById('confetti'), cctx = cf.getContext('2d');
+var CW=0, CH=0, bits=[], cfOn=true, craf=0;
+var CFCOL = ['#e8624a','#f0b03e','#d97a9c','#2f8574','#f7c9a8'];
+function cfSize(){ var d=Math.min(devicePixelRatio||1,2);
+  CW=cf.width=innerWidth*d; CH=cf.height=innerHeight*d;
+  cf.style.width=innerWidth+'px'; cf.style.height=innerHeight+'px'; }
+function mkBit(top){ return {x:Math.random()*CW, y: top? -20 : Math.random()*CH,
+  w:(4+Math.random()*7), h:(6+Math.random()*10), c:CFCOL[(Math.random()*CFCOL.length)|0],
+  vy:.25+Math.random()*.5, vx:(Math.random()-.5)*.3, rot:Math.random()*6.28, vr:(Math.random()-.5)*.02, o:.5+Math.random()*.35}; }
+function cfInit(){ bits=[]; var n=Math.round(Math.min(70, innerWidth/22)); for(var i=0;i<n;i++) bits.push(mkBit(false)); }
+function cfDraw(){
+  cctx.clearRect(0,0,CW,CH);
+  for(var i=0;i<bits.length;i++){ var b=bits[i];
+    b.y += b.vy; b.x += b.vx; b.rot += b.vr;
+    if(b.y > CH+30){ bits[i]=mkBit(true); continue; }
+    cctx.save(); cctx.translate(b.x,b.y); cctx.rotate(b.rot);
+    cctx.globalAlpha=b.o; cctx.fillStyle=b.c;
+    cctx.fillRect(-b.w/2,-b.h/2,b.w,b.h); cctx.restore(); }
+  craf = requestAnimationFrame(cfDraw);
+}
+function cfStart(){ cancelAnimationFrame(craf); if(cfOn) craf=requestAnimationFrame(cfDraw); }
+function toggleConfetti(){
+  cfOn=!cfOn; var b=document.getElementById('cfBtn'); if(b) b.textContent = cfOn?'✦':'✧';
+  if(cfOn){ cfStart(); } else { cancelAnimationFrame(craf); cctx.clearRect(0,0,CW,CH); }
+}
+function burst(){ if(!cfOn) return;
+  for(var i=0;i<26;i++){ var b=mkBit(true); b.vy=.8+Math.random()*1.4; bits.push(b); }
+  if(bits.length>220) bits.splice(0, bits.length-220);
+}
+
+/* slingervlaggetjes: doorhangende touwtjes, vlaggen volgen de curve */
+function drawGarland(){
+  var host=document.getElementById('garland'); if(!host) return;
+  var W=Math.max(innerWidth,360), H=80, cols=['#e8624a','#f0b03e','#2f8574','#d97a9c'];
+  var nSw=Math.max(1,Math.round(W/620)), sw=W/nSw, ci=0, rope='', flags='';
+  for(var s=0;s<nSw;s++){
+    var x0=s*sw-14, x1=(s+1)*sw+14, y0=12, y1=12, cxp=(x0+x1)/2, cyp=64;
+    rope+='M'+x0+','+y0+' Q'+cxp+','+cyp+' '+x1+','+y1+' ';
+    var N=Math.max(5,Math.round(sw/68));
+    for(var i=1;i<=N;i++){
+      var t=i/(N+1), mt=1-t;
+      var px=mt*mt*x0+2*mt*t*cxp+t*t*x1;
+      var py=mt*mt*y0+2*mt*t*cyp+t*t*y1;
+      var dx=2*mt*(cxp-x0)+2*t*(x1-cxp);
+      var dy=2*mt*(cyp-y0)+2*t*(y1-cyp);
+      var ang=Math.atan2(dy,dx)*180/Math.PI;
+      var c=cols[ci++%cols.length];
+      flags+='<g transform="translate('+px.toFixed(1)+','+py.toFixed(1)+') rotate('+ang.toFixed(1)+')">'
+           +'<path d="M-9,1 L9,1 L1.6,24 Q0,27 -1.6,24 Z" fill="'+c+'"/>'
+           +'<rect x="-9" y="0" width="18" height="3.4" rx="1.7" fill="'+c+'" opacity=".55"/>'
+           +'</g>';
+    }
+  }
+  host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMin meet">'
+    +'<path d="'+rope+'" fill="none" stroke="#c9a689" stroke-width="2.6" stroke-linecap="round"/>'
+    +flags+'</svg>';
+}
+drawGarland();
+
+/* =========================================================
+   MUZIEK & SOUNDBOARD (YouTube iframe API)
+   ========================================================= */
+var TUNE = "jyXb9rF8v4Q"; // spelshow-intromuziekje
+var tunePlayer=null, tunePlaying=false;
+var tunePending=false;
+function toggleTune(){
+  var btn=document.getElementById('tuneBtn');
+  if(!(window.YT&&window.YT.Player)){ tunePending=true; if(btn)btn.textContent='♪ laden…'; return; }
+  if(!tunePlayer){
+    tunePlayer=new YT.Player('tuneplayer',{ videoId:TUNE,
+      playerVars:{autoplay:1,controls:0,disablekb:1,loop:1,playlist:TUNE,playsinline:1},
+      events:{ onReady:function(e){ try{e.target.setVolume(35);e.target.playVideo();}catch(x){}
+          tunePlaying=true; if(btn)btn.textContent='⏸ Tune'; },
+        onStateChange:function(e){ if(e.data===YT.PlayerState.ENDED){ try{e.target.playVideo();}catch(x){} } } } });
+    return;
+  }
+  if(tunePlaying){ try{tunePlayer.pauseVideo();}catch(x){} tunePlaying=false; if(btn)btn.textContent='♪ Tune'; }
+  else { try{tunePlayer.playVideo();}catch(x){} tunePlaying=true; if(btn)btn.textContent='⏸ Tune'; }
+}
+
+var SOUNDS=[
+  {e:"🐐",n:"Gillende geit",id:"X78GyIfrSV4"},
+  {e:"😂",n:"Lachband",id:"3IC76o_lhFw"},
+  {e:"👏",n:"Applaus",id:"B7w4DrAmSS8"},
+  {e:"📢",n:"DJ airhorn",id:"8G4ye7_2ZR0"},
+  {e:"🎺",n:"Sad trombone",id:"CQeezCdF4mk"},
+  {e:"🛗",n:"Liftmuziek",id:"xy_NKN75Jhw"},
+  {e:"❌",n:"Mission failed",id:"1IrRau8Q8mw"},
+  {e:"😱",n:"Aahhhh",id:"ewGwngOFsXk"}
+];
+var sbPlayer=null, sbReady=false, sbPending=null, sbOpen=false;
+function buildSoundboard(){
+  var el=document.getElementById('soundboard'); if(!el) return;
+  var h='<div class="sb-head"><span>🔊 Soundboard</span><button class="sb-x" onclick="toggleSoundboard()" title="Sluiten">✕</button></div><div class="sb-grid">';
+  SOUNDS.forEach(function(s,i){ h+='<button onclick="playSound('+i+')"><span class="em">'+s.e+'</span>'+s.n+'</button>'; });
+  h+='<button class="sb-stop" onclick="stopSound()">⏹ Stop</button></div>';
+  el.innerHTML=h;
+}
+function toggleSoundboard(){
+  sbOpen=!sbOpen;
+  var el=document.getElementById('soundboard'), b=document.getElementById('sbBtn');
+  if(el){ el.classList.toggle('open',sbOpen); el.setAttribute('aria-hidden',String(!sbOpen)); }
+  if(b) b.textContent = sbOpen ? '🎛️ FX ▲' : '🎛️ FX';
+}
+function playSound(i){
+  var s=SOUNDS[i]; if(!s) return;
+  if(!(window.YT&&window.YT.Player)) return;
+  if(!sbPlayer){
+    sbPending=s.id;
+    sbPlayer=new YT.Player('sbplayer',{ videoId:s.id, playerVars:{autoplay:1,controls:0,disablekb:1,playsinline:1},
+      events:{ onReady:function(e){ sbReady=true; try{ e.target.setVolume(80); e.target.loadVideoById(sbPending||s.id); sbPending=null; }catch(x){} } } });
+    return;
+  }
+  if(!sbReady){ sbPending=s.id; return; }
+  try{ sbPlayer.loadVideoById(s.id); sbPlayer.setVolume(80); sbPlayer.playVideo(); }catch(x){}
+}
+function stopSound(){ if(sbPlayer){ try{sbPlayer.stopVideo();}catch(x){} } }
+
+window.onYouTubeIframeAPIReady=function(){ if(tunePending){ tunePending=false; toggleTune(); } };
+(function(){ var s=document.createElement('script'); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); })();
+buildSoundboard();
+
+/* =========================================================
+   INIT
+   ========================================================= */
+function goFs(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
+
+document.addEventListener('keydown', function(e){
+  if(/input|textarea/i.test((e.target.tagName||''))) return;
+  if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); next(); }
+  else if(e.key==='ArrowLeft') prev();
+  else if(e.key==='a'||e.key==='A') toggleAnswer();
+  else if(e.key==='f'||e.key==='F') goFs();
+  else if(e.key==='s'||e.key==='S'){
+    var best=-1;
+    for(var i2=0;i2<slides.length;i2++){
+      if(slides[i2].t==='stand'){ if(best<0 || Math.abs(i2-idx)<Math.abs(best-idx)) best=i2; }
+    }
+    if(best>=0){ idx=best; render(); }
+  }
+});
+var tsx=0;
+document.addEventListener('touchstart',function(e){ tsx=e.changedTouches[0].clientX; },{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tsx;
+  if(Math.abs(dx)>70){ if(dx<0) next(); else prev(); }
+},{passive:true});
+
+addEventListener('resize', function(){ cfSize(); cfInit(); drawGarland(); });
+cfSize(); cfInit(); cfStart();
+buildSlides();
+makeTeams();
+render();
+</script>
+</body>
+</html>
